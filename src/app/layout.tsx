@@ -17,9 +17,9 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Meeting Action Console",
+  title: "PMO Copilot",
   description:
-    "Analyze meeting transcripts, extract action items, and create Jira tickets from one clean workspace.",
+    "AI-native delivery orchestration for turning meetings into governed execution, delivery signals, and follow-through.",
 };
 
 export default function RootLayout({
