@@ -467,3 +467,273 @@ export const CHAT_PROMPTS = [
   "Summarize delivery risks for leadership.",
   "Which Jira tickets originated from meetings?",
 ];
+
+export type HeroSignal = {
+  label: string;
+  value: string;
+  note: string;
+};
+
+export type CapabilityCard = {
+  title: string;
+  summary: string;
+  bullets: string[];
+};
+
+export type TrendPoint = {
+  label: string;
+  completed: number;
+  atRisk: number;
+};
+
+export type CapacityCell = {
+  label: string;
+  load: number;
+  value: string;
+};
+
+export type CapacityRow = {
+  team: string;
+  cells: CapacityCell[];
+};
+
+export type GovernanceCheck = {
+  label: string;
+  score: number;
+  note: string;
+};
+
+export type PipelineStage = {
+  label: string;
+  count: string;
+  delta: string;
+  tone: MetricTone;
+};
+
+export type RiskMatrixItem = {
+  workstream: string;
+  owner: string;
+  urgency: string;
+  impact: string;
+  status: string;
+};
+
+export type ProgramBoardRow = {
+  program: string;
+  owner: string;
+  health: MetricTone;
+  milestone: string;
+  progress: number;
+  attention: string;
+};
+
+export const HERO_SIGNALS: HeroSignal[] = [
+  {
+    label: "Programs on track",
+    value: "18 / 24",
+    note: "6 need intervention this week.",
+  },
+  {
+    label: "Decisions captured",
+    value: "96%",
+    note: "Minutes are flowing into execution records within one hour.",
+  },
+  {
+    label: "Escalations prevented",
+    value: "11",
+    note: "AI surfaced delivery drift before leadership review.",
+  },
+];
+
+export const CAPABILITY_CARDS: CapabilityCard[] = [
+  {
+    title: "Centralize operational truth",
+    summary:
+      "Unify transcripts, risks, tasks, ownership, and delivery updates in one command surface rather than scattered notes and tickets.",
+    bullets: [
+      "Live portfolio snapshots",
+      "Decision and dependency capture",
+      "Program-wide visibility across teams",
+    ],
+  },
+  {
+    title: "Instill accountability by design",
+    summary:
+      "Every meeting output becomes named owners, due dates, governance checks, and follow-up motion instead of passive summaries.",
+    bullets: [
+      "AI ownership detection",
+      "Approval-first task creation",
+      "Follow-through reminders and escalations",
+    ],
+  },
+  {
+    title: "Anticipate risk before slippage",
+    summary:
+      "Heat maps, workload signals, and executive indicators make delivery drift obvious early enough to act on it.",
+    bullets: [
+      "Resource heat maps",
+      "Trend and milestone indicators",
+      "Stakeholder and governance risk signals",
+    ],
+  },
+];
+
+export const EXECUTION_TREND: TrendPoint[] = [
+  { label: "W1", completed: 58, atRisk: 14 },
+  { label: "W2", completed: 63, atRisk: 12 },
+  { label: "W3", completed: 69, atRisk: 10 },
+  { label: "W4", completed: 73, atRisk: 9 },
+  { label: "W5", completed: 78, atRisk: 7 },
+  { label: "W6", completed: 82, atRisk: 6 },
+];
+
+export const CAPACITY_HEATMAP: CapacityRow[] = [
+  {
+    team: "Treasury",
+    cells: [
+      { label: "Mon", load: 4, value: "92%" },
+      { label: "Tue", load: 3, value: "81%" },
+      { label: "Wed", load: 4, value: "89%" },
+      { label: "Thu", load: 2, value: "64%" },
+      { label: "Fri", load: 1, value: "42%" },
+    ],
+  },
+  {
+    team: "Infra",
+    cells: [
+      { label: "Mon", load: 3, value: "78%" },
+      { label: "Tue", load: 4, value: "95%" },
+      { label: "Wed", load: 4, value: "88%" },
+      { label: "Thu", load: 3, value: "74%" },
+      { label: "Fri", load: 2, value: "59%" },
+    ],
+  },
+  {
+    team: "Security",
+    cells: [
+      { label: "Mon", load: 2, value: "66%" },
+      { label: "Tue", load: 3, value: "79%" },
+      { label: "Wed", load: 4, value: "91%" },
+      { label: "Thu", load: 4, value: "93%" },
+      { label: "Fri", load: 3, value: "70%" },
+    ],
+  },
+  {
+    team: "CX Enablement",
+    cells: [
+      { label: "Mon", load: 1, value: "34%" },
+      { label: "Tue", load: 2, value: "56%" },
+      { label: "Wed", load: 2, value: "61%" },
+      { label: "Thu", load: 3, value: "72%" },
+      { label: "Fri", load: 2, value: "54%" },
+    ],
+  },
+];
+
+export const GOVERNANCE_CHECKS: GovernanceCheck[] = [
+  {
+    label: "Owners assigned",
+    score: 94,
+    note: "Only 3 open actions still need a confirmed owner.",
+  },
+  {
+    label: "Due dates confirmed",
+    score: 81,
+    note: "Governance quality improves once every task carries a deadline.",
+  },
+  {
+    label: "Jira linkage coverage",
+    score: 88,
+    note: "Most execution items already map back to delivery systems.",
+  },
+  {
+    label: "Executive readiness",
+    score: 91,
+    note: "Leadership summaries can be generated without manual cleanup.",
+  },
+];
+
+export const ACTION_PIPELINE: PipelineStage[] = [
+  { label: "Suggested", count: "18", delta: "+4 today", tone: "neutral" },
+  { label: "Awaiting review", count: "7", delta: "2 high priority", tone: "watch" },
+  { label: "Approved", count: "31", delta: "+9 synced", tone: "good" },
+  { label: "Escalated", count: "5", delta: "Needs PMO attention", tone: "risk" },
+];
+
+export const RISK_MATRIX: RiskMatrixItem[] = [
+  {
+    workstream: "Release 5.2 gateway",
+    owner: "Priya Raman",
+    urgency: "High",
+    impact: "High",
+    status: "Security approval delay",
+  },
+  {
+    workstream: "Treasury timeout validation",
+    owner: "John Smith",
+    urgency: "High",
+    impact: "Medium",
+    status: "Blocked on firewall change",
+  },
+  {
+    workstream: "Enablement note",
+    owner: "Marcus Lee",
+    urgency: "Medium",
+    impact: "Medium",
+    status: "Waiting on technical stability",
+  },
+  {
+    workstream: "Governance audit sweep",
+    owner: "PMO Office",
+    urgency: "Medium",
+    impact: "Low",
+    status: "Missing due dates in 2 teams",
+  },
+];
+
+export const PROGRAM_BOARD_ROWS: ProgramBoardRow[] = [
+  {
+    program: "Release 5.2",
+    owner: "Priya Raman",
+    health: "watch",
+    milestone: "UAT gate May 15",
+    progress: 74,
+    attention: "Security approval and infra dependency",
+  },
+  {
+    program: "Treasury modernization",
+    owner: "John Smith",
+    health: "risk",
+    milestone: "Timeout validation",
+    progress: 62,
+    attention: "4 unresolved blockers across 3 teams",
+  },
+  {
+    program: "PMO governance sprint",
+    owner: "Nina Shah",
+    health: "good",
+    milestone: "Audit closeout",
+    progress: 89,
+    attention: "Minor due-date hygiene work remaining",
+  },
+  {
+    program: "CX launch readiness",
+    owner: "Marcus Lee",
+    health: "neutral",
+    milestone: "Comms packet",
+    progress: 68,
+    attention: "Waiting for release confidence signal",
+  },
+];
+
+export const INTEGRATION_CLOUD = [
+  "Jira",
+  "Azure DevOps",
+  "Asana",
+  "Outlook",
+  "Teams",
+  "Zoom",
+  "Confluence",
+  "SharePoint",
+  "Slack",
+];
