@@ -173,7 +173,6 @@ function LoadingState() {
 export function DeliveryWorkflowPage() {
   const {
     workflowSession,
-    hasLoaded,
     hasAnalysis,
     hasTranscript,
     isJiraReady,
@@ -652,16 +651,6 @@ export function DeliveryWorkflowPage() {
 
   function advanceWorkflow() {
     activateStep(Math.min(activeIndex + 1, workflow.length - 1));
-  }
-
-  if (!hasLoaded) {
-    return (
-      <div className="min-h-screen bg-[#F8FAFC] px-4 py-6 lg:px-6">
-        <div className="mx-auto max-w-[1600px] rounded-3xl border border-white/20 bg-white/70 p-8 shadow-lg shadow-black/5 backdrop-blur-md">
-          <LoadingState />
-        </div>
-      </div>
-    );
   }
 
   if (!hasTranscript) {

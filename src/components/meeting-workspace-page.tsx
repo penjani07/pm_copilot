@@ -37,6 +37,7 @@ import {
   parseStoredOutlookSettings,
   parseStoredWorkflowSession,
 } from "@/lib/workflow-storage";
+import { notifyWorkflowSnapshotChanged } from "@/lib/use-workflow-snapshot";
 
 import styles from "@/app/page.module.css";
 
@@ -333,6 +334,7 @@ export function MeetingWorkspacePage() {
     }
 
     window.localStorage.setItem(JIRA_STORAGE_KEY, JSON.stringify(jiraSettings));
+    notifyWorkflowSnapshotChanged();
   }, [isStorageReady, jiraSettings]);
 
   useEffect(() => {
@@ -344,6 +346,7 @@ export function MeetingWorkspacePage() {
       OUTLOOK_STORAGE_KEY,
       JSON.stringify(outlookSettings),
     );
+    notifyWorkflowSnapshotChanged();
   }, [isStorageReady, outlookSettings]);
 
   useEffect(() => {
@@ -361,6 +364,7 @@ export function MeetingWorkspacePage() {
         updatedAt: new Date().toISOString(),
       }),
     );
+    notifyWorkflowSnapshotChanged();
   }, [
     analysis,
     isStorageReady,

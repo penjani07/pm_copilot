@@ -28,7 +28,7 @@ function requiresReview(item: ActionItem) {
 }
 
 export function ActionsWorkflowPage() {
-  const { workflowSession, hasAnalysis, hasLoaded, isJiraReady } = useWorkflowSnapshot();
+  const { workflowSession, hasAnalysis, isJiraReady } = useWorkflowSnapshot();
   const analysis = workflowSession.analysis;
   const actionItems = analysis?.actionItems ?? [];
   const reviewItems = actionItems.filter(requiresReview);
@@ -113,12 +113,7 @@ export function ActionsWorkflowPage() {
           </aside>
 
           <main className="space-y-6">
-            {!hasLoaded ? (
-              <div className="rounded-3xl border border-white/20 bg-white/70 p-8 shadow-lg shadow-black/5 backdrop-blur-md">
-                <div className="h-6 w-48 animate-pulse rounded-full bg-slate-200/80" />
-                <div className="mt-4 h-32 animate-pulse rounded-2xl bg-white/70" />
-              </div>
-            ) : !hasAnalysis ? (
+            {!hasAnalysis ? (
               <div className="rounded-3xl border border-white/20 bg-white/70 p-8 shadow-lg shadow-black/5 backdrop-blur-md">
                 <h2 className="text-2xl font-semibold text-slate-950">No approved action queue yet</h2>
                 <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-500">

@@ -23,26 +23,13 @@ const TRACKER_STEPS = [
 ];
 
 export function MinutesWorkflowPage() {
-  const { workflowSession, hasAnalysis, hasLoaded } = useWorkflowSnapshot();
+  const { workflowSession } = useWorkflowSnapshot();
   const analysis = workflowSession.analysis;
   const transcriptLines = workflowSession.transcript
     .split(/\n+/)
     .map((line) => line.trim())
     .filter(Boolean)
     .slice(0, 10);
-
-  if (!hasLoaded) {
-    return (
-      <div className="min-h-screen bg-[#F8FAFC]">
-        <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-6 px-4 pb-10 pt-4 lg:px-6">
-          <div className="rounded-3xl border border-white/20 bg-white/70 p-8 shadow-lg shadow-black/5 backdrop-blur-md">
-            <div className="h-6 w-48 animate-pulse rounded-full bg-slate-200/80" />
-            <div className="mt-4 h-32 animate-pulse rounded-2xl bg-white/70" />
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (!analysis) {
     return (

@@ -26,6 +26,11 @@ type WorkflowSnapshotState = {
   hasLoaded: boolean;
 };
 
+const WORKFLOW_STORAGE_UPDATED_EVENT = "workflow-storage-updated";
+
+let cachedClientSignature = "";
+let cachedClientSnapshot: WorkflowSnapshotState | null = null;
+
 function readServerSnapshot(): WorkflowSnapshotState {
   return {
     workflowSession: EMPTY_WORKFLOW_SESSION,
@@ -36,28 +41,49 @@ function readServerSnapshot(): WorkflowSnapshotState {
 }
 
 function readClientSnapshot(): WorkflowSnapshotState {
-  return {
+  const workflowValue =
+    window.localStorage.getItem(WORKFLOW_SESSION_STORAGE_KEY) ?? "";
+  const jiraValue = window.localStorage.getItem(JIRA_STORAGE_KEY) ?? "";
+  const outlookValue = window.localStorage.getItem(OUTLOOK_STORAGE_KEY) ?? "";
+  const signature = `${workflowValue}::${jiraValue}::${outlookValue}`;
+
+  if (cachedClientSnapshot && cachedClientSignature === signature) {
+    return cachedClientSnapshot;
+  }
+
+  cachedClientSignature = signature;
+  cachedClientSnapshot = {
     workflowSession: parseStoredWorkflowSession(
-      window.localStorage.getItem(WORKFLOW_SESSION_STORAGE_KEY),
+      workflowValue,
     ),
     jiraSettings: parseStoredJiraSettings(
-      window.localStorage.getItem(JIRA_STORAGE_KEY),
+      jiraValue,
     ),
     outlookSettings: parseStoredOutlookSettings(
-      window.localStorage.getItem(OUTLOOK_STORAGE_KEY),
+      outlookValue,
     ),
     hasLoaded: true,
   };
+
+  return cachedClientSnapshot;
 }
 
 function subscribe(onStoreChange: () => void) {
   window.addEventListener("storage", onStoreChange);
   window.addEventListener("focus", onStoreChange);
+  window.addEventListener(WORKFLOW_STORAGE_UPDATED_EVENT, onStoreChange);
 
   return () => {
     window.removeEventListener("storage", onStoreChange);
     window.removeEventListener("focus", onStoreChange);
+    window.removeEventListener(WORKFLOW_STORAGE_UPDATED_EVENT, onStoreChange);
   };
+}
+
+export function notifyWorkflowSnapshotChanged() {
+  cachedClientSignature = "";
+  cachedClientSnapshot = null;
+  window.dispatchEvent(new Event(WORKFLOW_STORAGE_UPDATED_EVENT));
 }
 
 export function useWorkflowSnapshot() {
