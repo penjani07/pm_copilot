@@ -7,10 +7,13 @@ import type { ReactNode } from "react";
 import styles from "./site-shell.module.css";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Console", note: "Meeting workspace" },
-  { href: "/playbooks", label: "Playbooks", note: "Reusable delivery kits" },
-  { href: "/briefings", label: "Briefings", note: "Portfolio snapshots" },
-  { href: "/workspace", label: "Workspace", note: "Direct console route" },
+  { href: "/", label: "Dashboard", note: "Command center" },
+  { href: "/intake", label: "Intake", note: "Ingest meeting evidence" },
+  { href: "/minutes", label: "Minutes", note: "Refined MoM view" },
+  { href: "/actions", label: "Actions", note: "Approval workflow" },
+  { href: "/delivery", label: "Delivery", note: "Tool sync and follow-up" },
+  { href: "/risks", label: "Risks", note: "Program intelligence" },
+  { href: "/executive", label: "Executive", note: "Leadership briefings" },
 ];
 
 type SiteShellProps = {
@@ -25,11 +28,12 @@ export function SiteShell({ children }: SiteShellProps) {
       <header className={styles.header}>
         <div className={styles.brandBlock}>
           <Link href="/" className={styles.brandMark}>
-            PM Drill
+            PMO Copilot
           </Link>
           <p>
-            A polished operating surface for turning meeting noise into delivery
-            decisions.
+            An AI program execution assistant for turning meetings into
+            accountable work, governed follow-through, and leadership-grade
+            delivery visibility.
           </p>
         </div>
 

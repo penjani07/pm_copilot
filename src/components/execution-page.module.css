@@ -1,0 +1,623 @@
+.page {
+  width: min(1320px, calc(100vw - 32px));
+  margin: 0 auto;
+  display: grid;
+  gap: 24px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 20px;
+}
+
+.heroPanel,
+.metricRail,
+.panel,
+.widgetCard,
+.kpiCard,
+.moduleCard,
+.timelineCard,
+.transcriptPanel,
+.minutesPanel,
+.metaCard,
+.itemCard,
+.integrationCard,
+.promptCard,
+.highlightCard,
+.riskCard,
+.summaryCard {
+  border: 1px solid var(--border-subtle);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.heroPanel {
+  position: relative;
+  overflow: hidden;
+  padding: 34px;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at top left, rgba(245, 158, 11, 0.24), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(14, 116, 144, 0.22), transparent 34%),
+    linear-gradient(135deg, #101828, #172033 42%, #21314d 100%);
+  color: #f8fafc;
+}
+
+.heroPanel::after {
+  content: "";
+  position: absolute;
+  inset: auto -20% -35% auto;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  filter: blur(6px);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.heroPanel h1 {
+  max-width: 13ch;
+  margin: 14px 0 16px;
+  font-size: clamp(2.7rem, 3.6vw, 4.5rem);
+  line-height: 0.94;
+  letter-spacing: -0.07em;
+}
+
+.heroPanel p {
+  max-width: 60ch;
+  margin: 0;
+  color: rgba(226, 232, 240, 0.86);
+  line-height: 1.7;
+}
+
+.heroMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.heroMeta span,
+.heroLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  padding: 9px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(241, 245, 249, 0.9);
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.heroLink {
+  width: fit-content;
+  margin-top: 22px;
+}
+
+.metricRail {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 32px;
+}
+
+.metricCard {
+  border-radius: 20px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.metricCard span,
+.label {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metricCard strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 1.7rem;
+  letter-spacing: -0.05em;
+}
+
+.metricCard p,
+.muted {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.panel {
+  border-radius: 28px;
+  padding: 26px;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.panelHeader h2,
+.panelHeader h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  letter-spacing: -0.03em;
+}
+
+.panelHeader p {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.kpiGrid,
+.widgetGrid,
+.moduleGrid,
+.promptGrid,
+.highlightGrid,
+.summaryGrid,
+.detailGrid,
+.metaGrid,
+.minutesGrid,
+.splitGrid,
+.stackGrid {
+  display: grid;
+  gap: 16px;
+}
+
+.kpiGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.kpiCard,
+.widgetCard,
+.moduleCard,
+.timelineCard,
+.itemCard,
+.integrationCard,
+.promptCard,
+.highlightCard,
+.riskCard,
+.summaryCard,
+.transcriptPanel,
+.minutesPanel,
+.metaCard {
+  border-radius: 22px;
+  padding: 20px;
+}
+
+.kpiCard strong,
+.widgetCard strong,
+.metaCard strong,
+.summaryCard strong {
+  display: block;
+  margin-top: 12px;
+  font-size: 1.85rem;
+  letter-spacing: -0.05em;
+}
+
+.kpiCard p,
+.widgetCard p,
+.metaCard p,
+.summaryCard p,
+.moduleCard p,
+.timelineCard p,
+.itemCard p,
+.integrationCard p,
+.promptCard p,
+.highlightCard p,
+.riskCard p,
+.transcriptPanel p,
+.minutesPanel p {
+  margin: 10px 0 0;
+  line-height: 1.65;
+}
+
+.kpiTrend {
+  color: #0f766e;
+  font-weight: 700;
+}
+
+.widgetGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.widgetValueRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.widgetValueRow strong {
+  margin-top: 0;
+}
+
+.toneNeutral,
+.toneGood,
+.toneWatch,
+.toneRisk,
+.pill,
+.subtlePill,
+.statusChip,
+.pageLink,
+.tabLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.toneNeutral,
+.toneGood,
+.toneWatch,
+.toneRisk,
+.pill,
+.subtlePill,
+.statusChip {
+  padding: 7px 10px;
+  font-size: 0.78rem;
+}
+
+.toneNeutral {
+  background: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+}
+
+.toneGood {
+  background: rgba(13, 148, 136, 0.14);
+  color: #0f766e;
+}
+
+.toneWatch {
+  background: rgba(245, 158, 11, 0.16);
+  color: #9a6700;
+}
+
+.toneRisk {
+  background: rgba(220, 38, 38, 0.14);
+  color: #b91c1c;
+}
+
+.pill {
+  background: rgba(13, 79, 78, 0.11);
+  color: var(--accent-strong);
+}
+
+.subtlePill,
+.statusChip {
+  background: rgba(245, 158, 11, 0.12);
+  color: #8b5b10;
+}
+
+.moduleGrid,
+.highlightGrid,
+.summaryGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.moduleCard h3,
+.highlightCard h3,
+.summaryCard h3,
+.itemCard h3,
+.integrationCard h3,
+.transcriptPanel h3,
+.minutesPanel h3,
+.riskCard h3 {
+  margin: 12px 0 0;
+  font-size: 1.18rem;
+  letter-spacing: -0.03em;
+}
+
+.bulletList,
+.compactList,
+.numberList {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding-left: 18px;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.timelineCard {
+  position: relative;
+  overflow: hidden;
+}
+
+.timelineStep {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #111827, #0f172a);
+  color: #f8fafc;
+  font-weight: 800;
+}
+
+.timelineCard h3 {
+  margin: 16px 0 0;
+  font-size: 1.1rem;
+}
+
+.timelineLink,
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.splitGrid {
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr) minmax(290px, 0.75fr);
+}
+
+.transcriptList,
+.stack {
+  display: grid;
+  gap: 12px;
+}
+
+.transcriptSnippet,
+.metadataListItem,
+.callout {
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.minutesGrid {
+  grid-template-columns: 1fr;
+}
+
+.metaGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tabLink,
+.pageLink {
+  min-width: 42px;
+  padding: 10px 14px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.tabLinkActive,
+.pageLinkActive {
+  border-color: rgba(15, 23, 42, 0.14);
+  background: linear-gradient(180deg, #111827, #0f172a);
+  color: #f8fafc;
+}
+
+.itemGrid,
+.integrationGrid,
+.riskGrid {
+  display: grid;
+  gap: 16px;
+}
+
+.itemGrid,
+.integrationGrid,
+.riskGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.itemTopRow,
+.cardTopRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.detailGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 16px;
+}
+
+.detailCard {
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.footerBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border-radius: 22px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.table th,
+.table td {
+  padding: 16px 18px;
+  text-align: left;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  vertical-align: top;
+}
+
+.table th {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.banner {
+  border-radius: 24px;
+  padding: 22px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.92));
+  color: #f8fafc;
+}
+
+.banner p {
+  color: rgba(226, 232, 240, 0.86);
+}
+
+.bannerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.promptGrid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.promptCard {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(247, 250, 252, 0.76));
+}
+
+.summaryGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.emptyState {
+  border-radius: 22px;
+  padding: 28px;
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+@media (max-width: 1180px) {
+  .hero,
+  .splitGrid,
+  .kpiGrid,
+  .widgetGrid,
+  .itemGrid,
+  .integrationGrid,
+  .riskGrid,
+  .summaryGrid,
+  .detailGrid,
+  .metaGrid,
+  .promptGrid,
+  .timeline,
+  .moduleGrid,
+  .highlightGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 960px) {
+  .hero,
+  .splitGrid,
+  .kpiGrid,
+  .widgetGrid,
+  .itemGrid,
+  .integrationGrid,
+  .riskGrid,
+  .summaryGrid,
+  .detailGrid,
+  .metaGrid,
+  .promptGrid,
+  .timeline,
+  .moduleGrid,
+  .highlightGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 820px) {
+  .page {
+    width: min(100vw - 20px, 100%);
+  }
+
+  .heroPanel,
+  .metricRail,
+  .panel,
+  .widgetCard,
+  .kpiCard,
+  .moduleCard,
+  .timelineCard,
+  .transcriptPanel,
+  .minutesPanel,
+  .metaCard,
+  .itemCard,
+  .integrationCard,
+  .promptCard,
+  .highlightCard,
+  .riskCard,
+  .summaryCard {
+    border-radius: 22px;
+  }
+
+  .heroPanel,
+  .panel {
+    padding: 20px;
+  }
+
+  .panelHeader,
+  .footerBar,
+  .itemTopRow,
+  .cardTopRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

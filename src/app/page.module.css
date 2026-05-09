@@ -512,6 +512,52 @@
   color: var(--accent-strong);
 }
 
+.sourceSummaryCard {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 16px 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.sourceSummaryHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.sourceSummaryTitle {
+  margin: 6px 0 0;
+  font-size: 1.05rem;
+  letter-spacing: -0.03em;
+}
+
+.sourceSummaryMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sourceSummaryMessage {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.sourcePreview {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(247, 249, 252, 0.92);
+  color: var(--ink-soft);
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .readyBadge,
 .setupBadge {
   padding: 8px 12px;
@@ -939,6 +985,10 @@
 
   .detailGrid {
     grid-template-columns: 1fr;
+  }
+
+  .sourceSummaryHeader {
+    flex-direction: column;
   }
 
   .toolbarActions,
