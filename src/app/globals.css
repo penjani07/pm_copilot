@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   --bg: #edf2f7;
   --bg-accent: #f8fafc;
@@ -47,3 +49,4 @@ input,
 textarea {
   font: inherit;
 }
+

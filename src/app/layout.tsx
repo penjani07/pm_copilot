@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Manrope } from "next/font/google";
 
+import { GlobalCommandBar } from "@/components/global-command-bar";
+
 import "./globals.css";
 
 const manrope = Manrope({
@@ -27,7 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${manrope.variable} ${mono.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <GlobalCommandBar />
+      </body>
     </html>
   );
 }

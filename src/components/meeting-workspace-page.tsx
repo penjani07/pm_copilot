@@ -26,11 +26,19 @@ import type {
   MeetingAnalysis,
   OutlookSettings,
 } from "@/lib/types";
+import {
+  JIRA_STORAGE_KEY,
+  OUTLOOK_STORAGE_KEY,
+  WORKFLOW_SESSION_STORAGE_KEY,
+  INITIAL_JIRA_SETTINGS,
+  INITIAL_OUTLOOK_SETTINGS,
+  hasOutlookCredentials,
+  parseStoredJiraSettings,
+  parseStoredOutlookSettings,
+  parseStoredWorkflowSession,
+} from "@/lib/workflow-storage";
 
 import styles from "@/app/page.module.css";
-
-const JIRA_STORAGE_KEY = "project-management-drill-jira-settings";
-const OUTLOOK_STORAGE_KEY = "project-management-drill-outlook-settings";
 
 const SAMPLE_TRANSCRIPT = `Weekly Product Delivery Sync
 
@@ -44,28 +52,6 @@ Priya: Great. I also need a draft rollout note for customer success by Wednesday
 Marcus: One risk is that we still do not have approval on the new screenshots from design.
 Priya: I will follow up with design today.`;
 
-const INITIAL_JIRA_SETTINGS: JiraSettings = {
-  siteUrl: "",
-  email: "",
-  apiToken: "",
-  projectKey: "",
-  issueType: "Task",
-  epicIssueType: "Epic",
-  storyIssueType: "Story",
-  defaultLabels: "meeting-ai,action-item",
-};
-
-const INITIAL_OUTLOOK_SETTINGS: OutlookSettings = {
-  accessToken: "",
-  organizerUserId: "",
-  calendarId: "",
-  cadenceWithinDays: "5",
-  meetingStartTime: "10:00",
-  meetingDurationMinutes: "30",
-  timeZone: "UTC",
-  location: "Microsoft Teams",
-  additionalAttendees: "",
-};
 
 type TicketState = {
   status: "idle" | "creating" | "success" | "error";
@@ -148,32 +134,6 @@ function formatMeetingDate(value: string | null) {
   }).format(date);
 }
 
-function parseStoredJiraSettings(value: string | null) {
-  if (!value) {
-    return INITIAL_JIRA_SETTINGS;
-  }
-
-  try {
-    const parsed = JSON.parse(value) as Partial<JiraSettings>;
-    return { ...INITIAL_JIRA_SETTINGS, ...parsed };
-  } catch {
-    return INITIAL_JIRA_SETTINGS;
-  }
-}
-
-function parseStoredOutlookSettings(value: string | null) {
-  if (!value) {
-    return INITIAL_OUTLOOK_SETTINGS;
-  }
-
-  try {
-    const parsed = JSON.parse(value) as Partial<OutlookSettings>;
-    return { ...INITIAL_OUTLOOK_SETTINGS, ...parsed };
-  } catch {
-    return INITIAL_OUTLOOK_SETTINGS;
-  }
-}
-
 function transcriptWordCount(transcript: string) {
   const trimmed = transcript.trim();
   return trimmed ? trimmed.split(/\s+/).length : 0;
@@ -232,16 +192,6 @@ function parseAdditionalAttendeeEntries(raw: string) {
 
       return value.includes("@") ? [value] : [];
     });
-}
-
-function hasOutlookCredentials(settings: OutlookSettings) {
-  return Boolean(
-    settings.accessToken &&
-      settings.cadenceWithinDays &&
-      settings.meetingStartTime &&
-      settings.meetingDurationMinutes &&
-      settings.timeZone,
-  );
 }
 
 type SourceSummaryCardProps = {
@@ -311,6 +261,7 @@ export function MeetingWorkspacePage() {
   const [inviteState, setInviteState] = useState<InviteState>({
     status: "idle",
   });
+  const [isStorageReady, setIsStorageReady] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
@@ -322,6 +273,25 @@ export function MeetingWorkspacePage() {
         window.localStorage.getItem(OUTLOOK_STORAGE_KEY),
       ),
     );
+    const workflowSession = parseStoredWorkflowSession(
+      window.localStorage.getItem(WORKFLOW_SESSION_STORAGE_KEY),
+    );
+
+    if (workflowSession.transcript) {
+      setTranscript(workflowSession.transcript);
+      setSelectedFileName(workflowSession.selectedFileName);
+      setSourceMessage(workflowSession.sourceMessage);
+      setAnalysis(workflowSession.analysis);
+      setActiveWorkflowTab(
+        workflowSession.analysis
+          ? "review"
+          : workflowSession.transcript
+            ? "review"
+            : "intake",
+      );
+    }
+
+    setIsStorageReady(true);
   }, []);
 
   useEffect(() => {
@@ -358,15 +328,46 @@ export function MeetingWorkspacePage() {
   }, []);
 
   useEffect(() => {
+    if (!isStorageReady) {
+      return;
+    }
+
     window.localStorage.setItem(JIRA_STORAGE_KEY, JSON.stringify(jiraSettings));
-  }, [jiraSettings]);
+  }, [isStorageReady, jiraSettings]);
 
   useEffect(() => {
+    if (!isStorageReady) {
+      return;
+    }
+
     window.localStorage.setItem(
       OUTLOOK_STORAGE_KEY,
       JSON.stringify(outlookSettings),
     );
-  }, [outlookSettings]);
+  }, [isStorageReady, outlookSettings]);
+
+  useEffect(() => {
+    if (!isStorageReady) {
+      return;
+    }
+
+    window.localStorage.setItem(
+      WORKFLOW_SESSION_STORAGE_KEY,
+      JSON.stringify({
+        transcript,
+        selectedFileName,
+        sourceMessage,
+        analysis,
+        updatedAt: new Date().toISOString(),
+      }),
+    );
+  }, [
+    analysis,
+    isStorageReady,
+    selectedFileName,
+    sourceMessage,
+    transcript,
+  ]);
 
   const wordCount = useMemo(() => transcriptWordCount(transcript), [transcript]);
   const hasTranscript = transcript.trim().length > 0;
@@ -856,13 +857,13 @@ export function MeetingWorkspacePage() {
       <div className={styles.page}>
       <header className={styles.hero}>
         <div className={styles.heroCopy}>
-          <span className={styles.eyebrow}>Meeting Action Workflow</span>
-          <h1>Turn raw meeting notes into a staged delivery flow your team can actually move through.</h1>
+          <span className={styles.eyebrow}>AI Program Execution Assistant</span>
+          <h1>Turn meeting evidence into owned execution, delivery follow-through, and PMO visibility.</h1>
           <p>
-            Inspired by product-style control surfaces rather than a single dense
-            form, this workspace now follows a clearer journey: capture the
-            source, review what the AI found, package the next actions, and
-            connect the tools that ship the work.
+            This workspace is the operational core of PMO Copilot. Ingest a
+            meeting transcript, refine the minutes, approve action items,
+            connect Jira and Outlook, and carry the conversation all the way
+            into accountable execution.
           </p>
 
           <div className={styles.heroActions}>
@@ -871,19 +872,20 @@ export function MeetingWorkspacePage() {
               type="button"
               onClick={() => focusWorkflowTab("intake")}
             >
-              Start with intake
+              Open intake
             </button>
             <button
               className={styles.secondaryButton}
               type="button"
               onClick={() => focusWorkflowTab("settings")}
             >
-              Open settings
+              Connect delivery tools
             </button>
           </div>
 
           <div className={styles.heroMeta}>
-            <span>{activeWorkflowMeta.eyebrow}</span>
+            <span>Ingest -&gt; review -&gt; deliver</span>
+            <span>Approval-first Jira and Outlook flow</span>
             <span>{activeWorkflowMeta.heading}</span>
           </div>
         </div>
@@ -947,14 +949,15 @@ export function MeetingWorkspacePage() {
         {activeWorkflowTab === "intake" ? (
           <div className={styles.workspace}>
           <section className={styles.panel}>
-            <div className={styles.panelHeader}>
-              <div>
-                <h2>File ingestion</h2>
-                <p>
-                  Start the workflow by uploading a meeting file. Analysis,
-                  review, and delivery happen in the next tabs.
-                </p>
-              </div>
+              <div className={styles.panelHeader}>
+                <div>
+                  <h2>Upload meeting source</h2>
+                  <p>
+                    Start with the transcript or meeting file. The next stages
+                    handle AI-refined minutes, action approval, and delivery
+                    system follow-through.
+                  </p>
+                </div>
               {selectedFileName ? (
                 <span className={styles.fileChip}>{selectedFileName}</span>
               ) : null}
@@ -1042,11 +1045,12 @@ export function MeetingWorkspacePage() {
             <section className={`${styles.panel} ${styles.sidebarIntro}`}>
               <div className={styles.panelHeader}>
                 <div>
-                  <span className={styles.eyebrow}>Workflow map</span>
-                  <h2>One step at a time</h2>
+                  <span className={styles.eyebrow}>Execution map</span>
+                  <h2>Built for structured follow-through</h2>
                   <p>
-                    Stage 1 only ingests the file. Stage 2 handles transcript
-                    review and analysis, then delivery follows after that.
+                    The workflow is intentionally staged so one meeting can turn
+                    into refined minutes, owned actions, enterprise tool sync,
+                    and governance-ready output without clutter.
                   </p>
                 </div>
               </div>
@@ -1057,10 +1061,17 @@ export function MeetingWorkspacePage() {
                   <p>Upload a file to unlock the review tab.</p>
                 </div>
                 <div className={styles.summaryBlock}>
-                  <span className={styles.summaryLabel}>Next stage</span>
+                  <span className={styles.summaryLabel}>Next outcome</span>
                   <p>
-                    Review will show the transcript, let you analyze it, and
-                    surface the structured meeting output.
+                    Review shows the transcript, AI-refined minutes, owners,
+                    risks, blockers, and execution-ready follow-ups.
+                  </p>
+                </div>
+                <div className={styles.summaryBlock}>
+                  <span className={styles.summaryLabel}>Enterprise control</span>
+                  <p>
+                    Nothing is pushed into Jira automatically. Actions stay in
+                    a PM review flow before downstream creation.
                   </p>
                 </div>
               </div>
