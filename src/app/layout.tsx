@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Manrope } from "next/font/google";
 
+import { GlobalCommandBar } from "@/components/global-command-bar";
+
 import "./globals.css";
 
 const manrope = Manrope({
@@ -15,9 +17,9 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Meeting Action Console",
+  title: "PMO Copilot",
   description:
-    "Analyze meeting transcripts, extract action items, and create Jira tickets from one clean workspace.",
+    "AI-native delivery orchestration for turning meetings into governed execution, delivery signals, and follow-through.",
 };
 
 export default function RootLayout({
@@ -27,7 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${manrope.variable} ${mono.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <GlobalCommandBar />
+      </body>
     </html>
   );
 }
