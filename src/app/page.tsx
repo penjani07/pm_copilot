@@ -1,10 +1,5 @@
-import { SiteShell } from "@/components/site-shell";
-import { HomeDashboard } from "@/components/home-dashboard";
+import MeetingWorkspacePage from "@/components/meeting-workspace-page";
 
 export default function HomePage() {
-  return (
-    <SiteShell>
-      <HomeDashboard />
-    </SiteShell>
-  );
+  return <MeetingWorkspacePage />;
 }

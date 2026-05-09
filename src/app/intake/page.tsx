@@ -1,5 +1,5 @@
-import MeetingWorkspacePage from "@/components/meeting-workspace-page";
+import { redirect } from "next/navigation";
 
 export default function IntakePage() {
-  return <MeetingWorkspacePage />;
+  redirect("/");
 }
