@@ -117,7 +117,7 @@ export function SiteShell({ children }: SiteShellProps) {
                 className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/70 px-3 py-2 text-xs font-medium text-slate-600 shadow-lg shadow-black/5 transition hover:-translate-y-0.5 hover:bg-white"
               >
                 Command bar
-                <span className="rounded-full bg-slate-950 px-2 py-1 text-[11px] text-white">
+                <span className="rounded-full bg-[#156e67] px-2 py-1 text-[11px] text-white">
                   Ctrl/Cmd + K
                 </span>
               </button>
@@ -149,9 +149,9 @@ export function SiteShell({ children }: SiteShellProps) {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`group flex items-start gap-3 rounded-[24px] px-4 py-3 transition ${
+                  className={`group flex items-start gap-3 rounded-[24px] px-4 py-3 transition ${
                         isActive
-                          ? "bg-slate-950 text-white shadow-lg shadow-black/10"
+                          ? "bg-[#156e67] text-white shadow-lg shadow-teal-900/10"
                           : "bg-transparent text-slate-600 hover:bg-white/80 hover:text-slate-950"
                       }`}
                     >

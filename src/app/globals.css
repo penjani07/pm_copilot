@@ -51,6 +51,64 @@ textarea {
   font: inherit;
 }
 
+.app-primary-action,
+.app-secondary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease;
+}
+
+.app-primary-action {
+  border: 1px solid rgba(21, 110, 103, 0.26);
+  background: #156e67;
+  color: #ffffff;
+  box-shadow: 0 14px 28px rgba(21, 110, 103, 0.18);
+}
+
+.app-primary-action:hover,
+.app-secondary-action:hover {
+  transform: translateY(-1px);
+}
+
+.app-primary-action:active {
+  background: #105f59;
+  color: #ffffff;
+}
+
+.app-secondary-action {
+  border: 1px solid rgba(203, 213, 225, 0.7);
+  background: rgba(255, 255, 255, 0.84);
+  color: #334155;
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.05);
+}
+
+.app-secondary-action:active {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.app-primary-action:disabled,
+.app-secondary-action:disabled,
+.app-primary-action[aria-disabled="true"],
+.app-secondary-action[aria-disabled="true"] {
+  border-color: rgba(148, 163, 184, 0.28);
+  background: rgba(241, 245, 249, 0.82);
+  color: #94a3b8;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
 ::selection {
   background: rgba(99, 102, 241, 0.18);
 }

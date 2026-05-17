@@ -670,14 +670,14 @@ export function DeliveryWorkflowPage() {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-medium text-white shadow-lg shadow-black/10"
+              className="app-primary-action gap-2"
             >
               Open workspace
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/minutes"
-              className="inline-flex items-center rounded-2xl border border-white/20 bg-white/80 px-4 py-3 text-sm font-medium text-slate-600 shadow-lg shadow-black/5"
+              className="app-secondary-action"
             >
               View minutes shell
             </Link>
@@ -731,7 +731,7 @@ export function DeliveryWorkflowPage() {
               <button
                 type="button"
                 onClick={advanceWorkflow}
-                className="inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-medium text-white shadow-lg shadow-black/10 transition hover:-translate-y-0.5"
+                className="app-primary-action gap-2"
               >
                 Advance workflow
                 <ArrowRight className="h-4 w-4" />
@@ -763,15 +763,17 @@ export function DeliveryWorkflowPage() {
                       onClick={() => activateStep(index)}
                       className={cn(
                         "flex w-full items-start gap-3 rounded-2xl px-3 py-3 text-left transition",
-                        isCurrent ? "bg-slate-950 text-white" : "text-slate-600 hover:bg-white/70",
+                        isCurrent
+                          ? "border border-[#156e67]/20 bg-[#156e67] text-white shadow-lg shadow-teal-900/10"
+                          : "border border-transparent text-slate-600 hover:bg-white/70",
                       )}
                     >
-                      <span className={cn("mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl", isCurrent ? "bg-white/10 text-white" : "bg-slate-100 text-slate-600")}>
+                      <span className={cn("mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl", isCurrent ? "bg-white/15 text-white" : "bg-slate-100 text-slate-600")}>
                         {step.status === "complete" ? <CheckCircle2 className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block text-sm font-medium">{step.title}</span>
-                        <span className={cn("mt-1 block text-xs leading-5", isCurrent ? "text-slate-300" : "text-slate-500")}>
+                        <span className={cn("mt-1 block text-xs leading-5", isCurrent ? "text-teal-50/90" : "text-slate-500")}>
                           {step.detail}
                         </span>
                       </span>
@@ -815,20 +817,22 @@ export function DeliveryWorkflowPage() {
                       onClick={() => activateStep(index)}
                       whileHover={{ y: -4 }}
                       className={cn(
-                        "relative overflow-hidden rounded-2xl border border-white/20 bg-white/70 p-4 text-left shadow-lg shadow-black/5 transition",
-                        isCurrent && "bg-slate-950 text-white",
+                        "relative overflow-hidden rounded-2xl border p-4 text-left shadow-lg transition",
+                        isCurrent
+                          ? "border-[#156e67]/20 bg-[#156e67] text-white shadow-teal-900/10"
+                          : "border-white/20 bg-white/70 text-slate-700 shadow-black/5",
                       )}
                     >
                       <div className="flex items-center justify-between gap-3">
-                        <span className={cn("flex h-10 w-10 items-center justify-center rounded-2xl", isCurrent ? "bg-white/10 text-white" : isComplete ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-500")}>
+                        <span className={cn("flex h-10 w-10 items-center justify-center rounded-2xl", isCurrent ? "bg-white/15 text-white" : isComplete ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-500")}>
                           {isComplete ? <CheckCircle2 className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
                         </span>
-                        <span className={cn("text-xs font-medium", isCurrent ? "text-slate-200" : "text-slate-400")}>
+                        <span className={cn("text-xs font-medium", isCurrent ? "text-teal-50/85" : "text-slate-400")}>
                           0{index + 1}
                         </span>
                       </div>
                       <p className="mt-4 text-sm font-medium">{step.title}</p>
-                      <p className={cn("mt-2 text-xs leading-5", isCurrent ? "text-slate-300" : "text-slate-500")}>
+                      <p className={cn("mt-2 text-xs leading-5", isCurrent ? "text-teal-50/90" : "text-slate-500")}>
                         {step.detail}
                       </p>
                     </motion.button>
@@ -1063,14 +1067,14 @@ export function DeliveryWorkflowPage() {
                 <button
                   type="button"
                   onClick={advanceWorkflow}
-                  className="inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-medium text-white shadow-lg shadow-black/10 transition hover:-translate-y-0.5"
+                  className="app-primary-action gap-2"
                 >
                   Continue workflow
                   <ArrowRight className="h-4 w-4" />
                 </button>
                 <Link
                   href="/actions"
-                  className="inline-flex items-center rounded-2xl border border-white/20 bg-white/80 px-4 py-3 text-sm font-medium text-slate-600 shadow-lg shadow-black/5"
+                  className="app-secondary-action"
                 >
                   Open action review
                 </Link>

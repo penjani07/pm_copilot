@@ -113,18 +113,18 @@ export function GlobalCommandBar() {
                         return (
                           <Command.Item
                             key={`${group.heading}-${item.label}`}
-                            className="flex cursor-pointer items-center gap-3 rounded-2xl px-3 py-3 text-left outline-none data-[selected=true]:bg-slate-900 data-[selected=true]:text-white"
+                            className="flex cursor-pointer items-center gap-3 rounded-2xl px-3 py-3 text-left outline-none data-[selected=true]:bg-[#156e67] data-[selected=true]:text-white"
                             onSelect={() => {
                               setOpen(false);
                               router.push(item.href);
                             }}
                           >
-                            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-600 data-[selected=true]:bg-white/15">
+                            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-600 data-[selected=true]:bg-white/15 data-[selected=true]:text-white">
                               <Icon className="h-4 w-4" />
                             </span>
                             <span className="flex min-w-0 flex-1 flex-col">
                               <span className="truncate text-sm font-medium">{item.label}</span>
-                              <span className="truncate text-xs text-slate-500 data-[selected=true]:text-slate-300">
+                              <span className="truncate text-xs text-slate-500 data-[selected=true]:text-teal-50/90">
                                 {item.description}
                               </span>
                             </span>

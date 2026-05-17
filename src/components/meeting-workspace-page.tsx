@@ -79,7 +79,7 @@ type InviteState = {
   start?: string;
 };
 
-type WorkflowTab = "intake" | "review" | "deliver" | "settings";
+type WorkflowTab = "intake" | "review" | "deliver";
 
 const WORKFLOW_TAB_META: Record<
   WorkflowTab,
@@ -105,13 +105,6 @@ const WORKFLOW_TAB_META: Record<
     eyebrow: "Stage 03",
     heading: "Move the work into delivery.",
     step: "03",
-  },
-  settings: {
-    description:
-      "Configure the systems behind the workflow so imports, Jira creation, and Outlook scheduling are ready when you need them.",
-    eyebrow: "Stage 04",
-    heading: "Connect the tools behind the workflow.",
-    step: "04",
   },
 };
 
@@ -246,6 +239,7 @@ export function MeetingWorkspacePage() {
   const [isDragging, setIsDragging] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isUploadingFile, setIsUploadingFile] = useState(false);
+  const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
   const [activeWorkflowTab, setActiveWorkflowTab] =
     useState<WorkflowTab>("intake");
   const [isOpenAiConfigured, setIsOpenAiConfigured] = useState<boolean | null>(
@@ -458,18 +452,10 @@ export function MeetingWorkspacePage() {
           ? `${analysis.actionItems.length} action item${analysis.actionItems.length === 1 ? "" : "s"}`
           : "Needs output",
       },
-      {
-        id: "settings" as const,
-        label: "Settings",
-        description: "Connect Jira and Outlook for the workflow.",
-        signal: `${Number(isJiraReady) + Number(isOutlookReady)}/2 ready`,
-      },
     ],
     [
       analysis,
       hasTranscript,
-      isJiraReady,
-      isOutlookReady,
       selectedFileName,
       wordCount,
     ],
@@ -482,7 +468,6 @@ export function MeetingWorkspacePage() {
     intake: true,
     review: canOpenReview,
     deliver: canOpenDeliver,
-    settings: true,
   };
 
   function focusWorkflowTab(tab: WorkflowTab) {
@@ -881,9 +866,9 @@ export function MeetingWorkspacePage() {
             <button
               className={styles.secondaryButton}
               type="button"
-              onClick={() => focusWorkflowTab("settings")}
+              onClick={() => setIsSettingsPanelOpen(true)}
             >
-              Connect delivery tools
+              Configure integrations
             </button>
           </div>
 
@@ -918,40 +903,355 @@ export function MeetingWorkspacePage() {
       </header>
 
       <div className={styles.appWorkspace}>
-      <nav className={styles.workflowNav} aria-label="Workflow sections">
-        {workflowTabs.map((tab) => (
+      <aside className={styles.workflowRail}>
+        <nav className={styles.workflowNav} aria-label="Workflow sections">
+          {workflowTabs.map((tab) => (
+            <button
+              key={tab.id}
+              className={`${styles.workflowNavButton} ${
+                activeWorkflowTab === tab.id ? styles.workflowNavButtonActive : ""
+              } ${!stageAvailability[tab.id] ? styles.workflowNavButtonLocked : ""}`}
+              type="button"
+              onClick={() => focusWorkflowTab(tab.id)}
+              disabled={!stageAvailability[tab.id]}
+            >
+              <span>{WORKFLOW_TAB_META[tab.id].step}</span>
+              <strong>{tab.label}</strong>
+              <small>{tab.signal}</small>
+            </button>
+          ))}
+        </nav>
+
+        <section className={styles.configRailCard} aria-label="Configuration">
+          <span className={styles.summaryLabel}>Configuration</span>
+          <h2>Jira, Outlook, and AI setup</h2>
+          <p>
+            Configure destination tools and check whether AI analysis is available.
+          </p>
+          <div className={styles.configRailStatus}>
+            <span className={isJiraReady ? styles.readyDot : styles.setupDot} />
+            <span>Jira {isJiraReady ? "ready" : "needs setup"}</span>
+          </div>
+          <div className={styles.configRailStatus}>
+            <span className={isOutlookReady ? styles.readyDot : styles.setupDot} />
+            <span>Outlook {isOutlookReady ? "ready" : "needs setup"}</span>
+          </div>
           <button
-            key={tab.id}
-            className={`${styles.workflowNavButton} ${
-              activeWorkflowTab === tab.id ? styles.workflowNavButtonActive : ""
-            } ${!stageAvailability[tab.id] ? styles.workflowNavButtonLocked : ""}`}
+            className={styles.secondaryButton}
             type="button"
-            onClick={() => focusWorkflowTab(tab.id)}
-            disabled={!stageAvailability[tab.id]}
+            onClick={() => setIsSettingsPanelOpen(true)}
           >
-            <span>{WORKFLOW_TAB_META[tab.id].step}</span>
-            <strong>{tab.label}</strong>
-            <small>{tab.signal}</small>
+            Open configuration
           </button>
-        ))}
-      </nav>
+        </section>
+      </aside>
 
       <div className={styles.stageDeck}>
+      {isSettingsPanelOpen ? (
+        <section className={`${styles.panel} ${styles.settingsPanel}`} aria-label="Delivery settings">
+          <div className={styles.settingsPanelHeader}>
+            <div>
+              <span className={styles.eyebrow}>Configuration</span>
+              <h2>Configure Jira, Outlook, and AI analysis.</h2>
+              <p>
+                Tool setup lives outside the numbered workflow so intake, review, and delivery stay
+                focused while integrations remain available from every stage.
+              </p>
+            </div>
+            <button
+              className={styles.secondaryButton}
+              type="button"
+              onClick={() => setIsSettingsPanelOpen(false)}
+            >
+              Close settings
+            </button>
+          </div>
+
+          <div className={styles.settingsStatusGrid}>
+            <div className={styles.summaryBlock}>
+              <span className={styles.summaryLabel}>Jira</span>
+              <p>
+                {isJiraReady
+                  ? "Connected and ready for ticket creation."
+                  : "Connection details still needed."}
+              </p>
+            </div>
+            <div className={styles.summaryBlock}>
+              <span className={styles.summaryLabel}>Outlook</span>
+              <p>
+                {isOutlookReady
+                  ? "Connected and ready for follow-up scheduling."
+                  : "Scheduling details still needed."}
+              </p>
+            </div>
+            <div className={styles.summaryBlock}>
+              <span className={styles.summaryLabel}>AI analysis</span>
+              <p>
+                {isOpenAiConfigured === false
+                  ? "OPENAI_API_KEY is missing. Add it to .env.local and restart the dev server."
+                  : "OpenAI analysis is available for meeting extraction."}
+              </p>
+            </div>
+          </div>
+
+          <div className={styles.settingsFormSections}>
+            <section className={styles.settingsFormSection}>
+              <div className={styles.panelHeader}>
+                <div>
+                  <h2>Organization Jira integration</h2>
+                  <p>Saved locally in this browser for the prototype workflow.</p>
+                </div>
+                <span className={isJiraReady ? styles.readyBadge : styles.setupBadge}>
+                  {isJiraReady ? "Connected" : "Needs setup"}
+                </span>
+              </div>
+
+              <div className={styles.formGrid}>
+                <label className={styles.field}>
+                  <span>Jira site URL</span>
+                  <input
+                    type="url"
+                    placeholder="https://your-org.atlassian.net"
+                    value={jiraSettings.siteUrl}
+                    onChange={updateJiraSetting("siteUrl")}
+                  />
+                </label>
+
+                <label className={styles.field}>
+                  <span>Jira email</span>
+                  <input
+                    type="email"
+                    placeholder="team@company.com"
+                    value={jiraSettings.email}
+                    onChange={updateJiraSetting("email")}
+                  />
+                </label>
+
+                <label className={styles.field}>
+                  <span>API token</span>
+                  <input
+                    type="password"
+                    placeholder="Atlassian API token"
+                    value={jiraSettings.apiToken}
+                    onChange={updateJiraSetting("apiToken")}
+                  />
+                </label>
+
+                <label className={styles.field}>
+                  <span>Project key</span>
+                  <input
+                    type="text"
+                    placeholder="ENG"
+                    value={jiraSettings.projectKey}
+                    onChange={updateJiraSetting("projectKey")}
+                  />
+                </label>
+
+                <label className={styles.field}>
+                  <span>Issue type</span>
+                  <input
+                    type="text"
+                    placeholder="Task"
+                    value={jiraSettings.issueType}
+                    onChange={updateJiraSetting("issueType")}
+                  />
+                </label>
+
+                <label className={styles.field}>
+                  <span>Epic issue type</span>
+                  <input
+                    type="text"
+                    placeholder="Epic"
+                    value={jiraSettings.epicIssueType}
+                    onChange={updateJiraSetting("epicIssueType")}
+                  />
+                </label>
+
+                <label className={styles.field}>
+                  <span>Story issue type</span>
+                  <input
+                    type="text"
+                    placeholder="Story"
+                    value={jiraSettings.storyIssueType}
+                    onChange={updateJiraSetting("storyIssueType")}
+                  />
+                </label>
+
+                <label className={styles.field}>
+                  <span>Default labels</span>
+                  <input
+                    type="text"
+                    placeholder="meeting-ai,team-sync"
+                    value={jiraSettings.defaultLabels}
+                    onChange={updateJiraSetting("defaultLabels")}
+                  />
+                </label>
+              </div>
+            </section>
+
+            <section className={styles.settingsFormSection}>
+              <div className={styles.panelHeader}>
+                <div>
+                  <h2>Outlook cadence scheduling</h2>
+                  <p>
+                    Use Microsoft Graph to send the next follow-up meeting invite with an
+                    Outlook calendar event and Teams join link.
+                  </p>
+                </div>
+                <span
+                  className={isOutlookReady ? styles.readyBadge : styles.setupBadge}
+                >
+                  {isOutlookReady ? "Connected" : "Needs setup"}
+                </span>
+              </div>
+
+              <div className={styles.formGrid}>
+                <label className={styles.field}>
+                  <span>Microsoft Graph access token</span>
+                  <input
+                    type="password"
+                    placeholder="Calendars.ReadWrite token"
+                    value={outlookSettings.accessToken}
+                    onChange={updateOutlookSetting("accessToken")}
+                  />
+                </label>
+
+                <div className={styles.inlineFields}>
+                  <label className={styles.field}>
+                    <span>Organizer user ID</span>
+                    <input
+                      type="text"
+                      placeholder="Optional; blank uses /me"
+                      value={outlookSettings.organizerUserId}
+                      onChange={updateOutlookSetting("organizerUserId")}
+                    />
+                  </label>
+
+                  <label className={styles.field}>
+                    <span>Calendar ID</span>
+                    <input
+                      type="text"
+                      placeholder="Optional target calendar"
+                      value={outlookSettings.calendarId}
+                      onChange={updateOutlookSetting("calendarId")}
+                    />
+                  </label>
+                </div>
+
+                <div className={styles.inlineFields}>
+                  <label className={styles.field}>
+                    <span>Schedule within days</span>
+                    <input
+                      type="number"
+                      min="1"
+                      max="30"
+                      value={outlookSettings.cadenceWithinDays}
+                      onChange={updateOutlookSetting("cadenceWithinDays")}
+                    />
+                  </label>
+
+                  <label className={styles.field}>
+                    <span>Meeting start time</span>
+                    <input
+                      type="time"
+                      value={outlookSettings.meetingStartTime}
+                      onChange={updateOutlookSetting("meetingStartTime")}
+                    />
+                  </label>
+
+                  <label className={styles.field}>
+                    <span>Duration minutes</span>
+                    <input
+                      type="number"
+                      min="15"
+                      step="15"
+                      value={outlookSettings.meetingDurationMinutes}
+                      onChange={updateOutlookSetting("meetingDurationMinutes")}
+                    />
+                  </label>
+                </div>
+
+                <div className={styles.inlineFields}>
+                  <label className={styles.field}>
+                    <span>Time zone</span>
+                    <input
+                      type="text"
+                      placeholder="Pacific Standard Time or UTC"
+                      value={outlookSettings.timeZone}
+                      onChange={updateOutlookSetting("timeZone")}
+                    />
+                  </label>
+
+                  <label className={styles.field}>
+                    <span>Location label</span>
+                    <input
+                      type="text"
+                      placeholder="Microsoft Teams"
+                      value={outlookSettings.location}
+                      onChange={updateOutlookSetting("location")}
+                    />
+                  </label>
+                </div>
+
+                <label className={styles.field}>
+                  <span>Additional attendee emails</span>
+                  <input
+                    type="text"
+                    placeholder="alex@company.com, sam@company.com"
+                    value={outlookSettings.additionalAttendees}
+                    onChange={updateOutlookSetting("additionalAttendees")}
+                  />
+                </label>
+
+                <p className={styles.helperText}>
+                  Outlook event creation uses Microsoft Graph calendar APIs and sends invitations
+                  to the attendee list. Use a Windows-style time zone if your tenant requires it.
+                </p>
+              </div>
+            </section>
+
+            <section className={styles.settingsFormSection}>
+              <div className={styles.panelHeader}>
+                <div>
+                  <h2>AI analysis configuration</h2>
+                  <p>
+                    OpenAI credentials are read from the local environment instead of browser
+                    storage.
+                  </p>
+                </div>
+                <span
+                  className={
+                    isOpenAiConfigured === false ? styles.setupBadge : styles.readyBadge
+                  }
+                >
+                  {isOpenAiConfigured === false ? "Needs setup" : "Available"}
+                </span>
+              </div>
+
+              <p className={styles.helperText}>
+                To change the AI key or model, edit <code>.env.local</code> in the project root.
+                This prototype currently reads <code>OPENAI_API_KEY</code> and{" "}
+                <code>OPENAI_MODEL</code> from that file.
+              </p>
+            </section>
+          </div>
+        </section>
+      ) : null}
+
       <section
         className={`${styles.workflowStage} ${
-          activeWorkflowTab === "intake" || activeWorkflowTab === "settings"
+          activeWorkflowTab === "intake"
             ? styles.workflowStageActive
             : styles.workflowStageHidden
         }`}
       >
         <div className={styles.stageIntro}>
-          <span className={styles.eyebrow}>{activeWorkflowMeta.eyebrow}</span>
-          <h2>{activeWorkflowMeta.heading}</h2>
-          <p>{activeWorkflowMeta.description}</p>
+          <span className={styles.eyebrow}>{WORKFLOW_TAB_META.intake.eyebrow}</span>
+          <h2>{WORKFLOW_TAB_META.intake.heading}</h2>
+          <p>{WORKFLOW_TAB_META.intake.description}</p>
         </div>
 
-        {activeWorkflowTab === "intake" ? (
-          <div className={styles.workspace}>
+        <div className={styles.workspace}>
           <section className={styles.panel}>
               <div className={styles.panelHeader}>
                 <div>
@@ -1082,266 +1382,6 @@ export function MeetingWorkspacePage() {
             </section>
           </aside>
         </div>
-        ) : (
-        <div className={styles.sidebar}>
-          <section className={`${styles.panel} ${styles.sidebarIntro}`}>
-            <div className={styles.panelHeader}>
-              <div>
-                <span className={styles.eyebrow}>
-                  {WORKFLOW_TAB_META.settings.eyebrow}
-                </span>
-                <h2>{WORKFLOW_TAB_META.settings.heading}</h2>
-                <p>{WORKFLOW_TAB_META.settings.description}</p>
-              </div>
-            </div>
-
-            <div className={styles.summaryStack}>
-              <div className={styles.summaryBlock}>
-                <span className={styles.summaryLabel}>Jira</span>
-                <p>{isJiraReady ? "Connected and ready for ticket creation." : "Connection details still needed."}</p>
-              </div>
-              <div className={styles.summaryBlock}>
-                <span className={styles.summaryLabel}>Outlook</span>
-                <p>{isOutlookReady ? "Connected and ready for follow-up scheduling." : "Scheduling details still needed."}</p>
-              </div>
-            </div>
-          </section>
-
-          <section className={styles.panel}>
-            <div className={styles.panelHeader}>
-              <div>
-                <h2>Organization Jira integration</h2>
-                <p>Saved locally in this browser for the prototype workflow.</p>
-              </div>
-              <span className={isJiraReady ? styles.readyBadge : styles.setupBadge}>
-                {isJiraReady ? "Connected" : "Needs setup"}
-              </span>
-            </div>
-
-            <div className={styles.formGrid}>
-              <label className={styles.field}>
-                <span>Jira site URL</span>
-                <input
-                  type="url"
-                  placeholder="https://your-org.atlassian.net"
-                  value={jiraSettings.siteUrl}
-                  onChange={updateJiraSetting("siteUrl")}
-                />
-              </label>
-
-              <label className={styles.field}>
-                <span>Jira email</span>
-                <input
-                  type="email"
-                  placeholder="team@company.com"
-                  value={jiraSettings.email}
-                  onChange={updateJiraSetting("email")}
-                />
-              </label>
-
-              <label className={styles.field}>
-                <span>API token</span>
-                <input
-                  type="password"
-                  placeholder="Atlassian API token"
-                  value={jiraSettings.apiToken}
-                  onChange={updateJiraSetting("apiToken")}
-                />
-              </label>
-
-              <label className={styles.field}>
-                <span>Project key</span>
-                <input
-                  type="text"
-                  placeholder="ENG"
-                  value={jiraSettings.projectKey}
-                  onChange={updateJiraSetting("projectKey")}
-                />
-              </label>
-
-              <label className={styles.field}>
-                <span>Issue type</span>
-                <input
-                  type="text"
-                  placeholder="Task"
-                  value={jiraSettings.issueType}
-                  onChange={updateJiraSetting("issueType")}
-                />
-              </label>
-
-              <label className={styles.field}>
-                <span>Epic issue type</span>
-                <input
-                  type="text"
-                  placeholder="Epic"
-                  value={jiraSettings.epicIssueType}
-                  onChange={updateJiraSetting("epicIssueType")}
-                />
-              </label>
-
-              <label className={styles.field}>
-                <span>Story issue type</span>
-                <input
-                  type="text"
-                  placeholder="Story"
-                  value={jiraSettings.storyIssueType}
-                  onChange={updateJiraSetting("storyIssueType")}
-                />
-              </label>
-
-              <label className={styles.field}>
-                <span>Default labels</span>
-                <input
-                  type="text"
-                  placeholder="meeting-ai,team-sync"
-                  value={jiraSettings.defaultLabels}
-                  onChange={updateJiraSetting("defaultLabels")}
-                />
-              </label>
-            </div>
-          </section>
-
-          <section className={styles.panel}>
-            <div className={styles.panelHeader}>
-              <div>
-                <h2>Outlook cadence scheduling</h2>
-                <p>
-                  Use Microsoft Graph to send the next follow-up meeting invite
-                  with an Outlook calendar event and Teams join link.
-                </p>
-              </div>
-              <span
-                className={isOutlookReady ? styles.readyBadge : styles.setupBadge}
-              >
-                {isOutlookReady ? "Connected" : "Needs setup"}
-              </span>
-            </div>
-
-            <div className={styles.formGrid}>
-              <label className={styles.field}>
-                <span>Microsoft Graph access token</span>
-                <input
-                  type="password"
-                  placeholder="Calendars.ReadWrite token"
-                  value={outlookSettings.accessToken}
-                  onChange={updateOutlookSetting("accessToken")}
-                />
-              </label>
-
-              <div className={styles.inlineFields}>
-                <label className={styles.field}>
-                  <span>Organizer user ID</span>
-                  <input
-                    type="text"
-                    placeholder="Optional; blank uses /me"
-                    value={outlookSettings.organizerUserId}
-                    onChange={updateOutlookSetting("organizerUserId")}
-                  />
-                </label>
-
-                <label className={styles.field}>
-                  <span>Calendar ID</span>
-                  <input
-                    type="text"
-                    placeholder="Optional target calendar"
-                    value={outlookSettings.calendarId}
-                    onChange={updateOutlookSetting("calendarId")}
-                  />
-                </label>
-              </div>
-
-              <div className={styles.inlineFields}>
-                <label className={styles.field}>
-                  <span>Schedule within days</span>
-                  <input
-                    type="number"
-                    min="1"
-                    max="30"
-                    value={outlookSettings.cadenceWithinDays}
-                    onChange={updateOutlookSetting("cadenceWithinDays")}
-                  />
-                </label>
-
-                <label className={styles.field}>
-                  <span>Meeting start time</span>
-                  <input
-                    type="time"
-                    value={outlookSettings.meetingStartTime}
-                    onChange={updateOutlookSetting("meetingStartTime")}
-                  />
-                </label>
-
-                <label className={styles.field}>
-                  <span>Duration minutes</span>
-                  <input
-                    type="number"
-                    min="15"
-                    step="15"
-                    value={outlookSettings.meetingDurationMinutes}
-                    onChange={updateOutlookSetting("meetingDurationMinutes")}
-                  />
-                </label>
-              </div>
-
-              <div className={styles.inlineFields}>
-                <label className={styles.field}>
-                  <span>Time zone</span>
-                  <input
-                    type="text"
-                    placeholder="Pacific Standard Time or UTC"
-                    value={outlookSettings.timeZone}
-                    onChange={updateOutlookSetting("timeZone")}
-                  />
-                </label>
-
-                <label className={styles.field}>
-                  <span>Location label</span>
-                  <input
-                    type="text"
-                    placeholder="Microsoft Teams"
-                    value={outlookSettings.location}
-                    onChange={updateOutlookSetting("location")}
-                  />
-                </label>
-              </div>
-
-              <label className={styles.field}>
-                <span>Additional attendee emails</span>
-                <input
-                  type="text"
-                  placeholder="alex@company.com, sam@company.com"
-                  value={outlookSettings.additionalAttendees}
-                  onChange={updateOutlookSetting("additionalAttendees")}
-                />
-              </label>
-
-              <p className={styles.helperText}>
-                Outlook event creation uses Microsoft Graph calendar APIs and
-                sends invitations to the attendee list. Use a Windows-style time
-                zone if your tenant requires it.
-              </p>
-            </div>
-          </section>
-
-          <section className={styles.panel}>
-            <div className={styles.panelHeader}>
-              <div>
-                <h2>AI behavior</h2>
-                <p>Configured for strong extraction quality with cost-conscious defaults.</p>
-              </div>
-            </div>
-
-            <ul className={styles.bulletList}>
-              <li>Writes short summaries for each agenda section before the owned follow-ups.</li>
-              <li>Detects owners, blockers, priorities, and ticket-ready descriptions.</li>
-              <li>Builds Jira-ready epics and stories with acceptance criteria from meeting minutes.</li>
-              <li>Suggests rough timelines per action item, epic, and story.</li>
-              <li>Proposes a follow-up cadence meeting with a short agenda and recommended attendees.</li>
-              <li>Supports direct imports from Slack, Teams, Zoom, and approved PDF, TXT, DOC, and DOCX files.</li>
-            </ul>
-          </section>
-        </div>
-        )}
       </section>
 
       {error ? <div className={styles.alert}>{error}</div> : null}
@@ -1451,7 +1491,7 @@ export function MeetingWorkspacePage() {
                   <p>
                     {isJiraReady
                       ? "Ticket creation is connected."
-                      : "Open settings to finish the Jira connection."}
+                      : "Open delivery settings to finish the Jira connection."}
                   </p>
                 </div>
                 <div className={styles.summaryBlock}>
@@ -1459,7 +1499,7 @@ export function MeetingWorkspacePage() {
                   <p>
                     {isOutlookReady
                       ? "Follow-up scheduling is connected."
-                      : "Open settings to finish the Outlook connection."}
+                      : "Open delivery settings to finish the Outlook connection."}
                   </p>
                 </div>
               </div>
@@ -1468,9 +1508,9 @@ export function MeetingWorkspacePage() {
                 <button
                   className={styles.secondaryButton}
                   type="button"
-                  onClick={() => focusWorkflowTab("settings")}
+                  onClick={() => setIsSettingsPanelOpen(true)}
                 >
-                  Open settings
+                  Delivery settings
                 </button>
                 <button
                   className={styles.secondaryButton}

@@ -67,7 +67,7 @@ export function ActionsWorkflowPage() {
                   key={step}
                   className={`rounded-2xl border border-white/20 p-4 text-sm shadow-lg shadow-black/5 backdrop-blur-md ${
                     index === 2
-                      ? "bg-slate-950 text-white"
+                      ? "bg-[#156e67] text-white"
                       : index < 2
                         ? "bg-emerald-50 text-emerald-700"
                         : "bg-white/70 text-slate-500"
@@ -122,7 +122,7 @@ export function ActionsWorkflowPage() {
                 </p>
                 <Link
                   href="/"
-                  className="mt-5 inline-flex items-center rounded-2xl bg-slate-950 px-4 py-3 text-sm font-medium text-white"
+                  className="app-primary-action mt-5"
                 >
                   Go to workspace
                 </Link>
