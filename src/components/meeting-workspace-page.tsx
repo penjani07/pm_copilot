@@ -541,6 +541,7 @@ export function MeetingWorkspacePage() {
       return;
     }
 
+    setIsSettingsPanelOpen(false);
     setActiveWorkflowTab(tab);
   }
 

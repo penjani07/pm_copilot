@@ -4,6 +4,13 @@
   --background: #f8fafc;
   --foreground: #0f172a;
   --border-subtle: #e2e8f0;
+  --bg: var(--background);
+  --bg-accent: #fbfcfe;
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-alt: rgba(255, 255, 255, 0.56);
+  --ink: var(--foreground);
+  --ink-soft: #5b6678;
+  --accent-strong: #111827;
   --shadow-soft: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
