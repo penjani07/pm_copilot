@@ -36,11 +36,25 @@ export type WorkflowSession = {
   updatedAt: string | null;
 };
 
+export type WorkflowStorageSnapshot = {
+  workflowSession: WorkflowSession;
+  jiraSettings: JiraSettings;
+  outlookSettings: OutlookSettings;
+  updatedAt: string | null;
+};
+
 export const EMPTY_WORKFLOW_SESSION: WorkflowSession = {
   transcript: "",
   selectedFileName: null,
   sourceMessage: null,
   analysis: null,
+  updatedAt: null,
+};
+
+export const EMPTY_WORKFLOW_STORAGE_SNAPSHOT: WorkflowStorageSnapshot = {
+  workflowSession: EMPTY_WORKFLOW_SESSION,
+  jiraSettings: INITIAL_JIRA_SETTINGS,
+  outlookSettings: INITIAL_OUTLOOK_SETTINGS,
   updatedAt: null,
 };
 
@@ -81,6 +95,41 @@ export function parseStoredWorkflowSession(value: string | null) {
   } catch {
     return EMPTY_WORKFLOW_SESSION;
   }
+}
+
+export function parseWorkflowStorageSnapshot(value: unknown) {
+  if (!value || typeof value !== "object") {
+    return EMPTY_WORKFLOW_STORAGE_SNAPSHOT;
+  }
+
+  const parsed = value as Partial<WorkflowStorageSnapshot>;
+
+  return {
+    workflowSession: {
+      ...EMPTY_WORKFLOW_SESSION,
+      ...(parsed.workflowSession ?? {}),
+    },
+    jiraSettings: {
+      ...INITIAL_JIRA_SETTINGS,
+      ...(parsed.jiraSettings ?? {}),
+    },
+    outlookSettings: {
+      ...INITIAL_OUTLOOK_SETTINGS,
+      ...(parsed.outlookSettings ?? {}),
+    },
+    updatedAt: parsed.updatedAt ?? parsed.workflowSession?.updatedAt ?? null,
+  };
+}
+
+export function hasWorkflowStorageSnapshotData(
+  snapshot: WorkflowStorageSnapshot,
+) {
+  return Boolean(
+    snapshot.workflowSession.transcript.trim() ||
+      snapshot.workflowSession.analysis ||
+      isJiraConfigured(snapshot.jiraSettings) ||
+      hasOutlookCredentials(snapshot.outlookSettings),
+  );
 }
 
 export function hasOutlookCredentials(settings: OutlookSettings) {

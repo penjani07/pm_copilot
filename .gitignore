@@ -31,6 +31,9 @@ yarn-error.log*
 .pnpm-debug.log*
 .dev-server.out.log
 .dev-server.err.log
+.dev-server-8000.out.log
+.dev-server-8000.err.log
+.workflow-state.json
 
 # env files (can opt-in for committing if needed)
 .env*

@@ -33,9 +33,12 @@ import {
   INITIAL_JIRA_SETTINGS,
   INITIAL_OUTLOOK_SETTINGS,
   hasOutlookCredentials,
+  hasWorkflowStorageSnapshotData,
+  parseWorkflowStorageSnapshot,
   parseStoredJiraSettings,
   parseStoredOutlookSettings,
   parseStoredWorkflowSession,
+  type WorkflowStorageSnapshot,
 } from "@/lib/workflow-storage";
 import { notifyWorkflowSnapshotChanged } from "@/lib/use-workflow-snapshot";
 
@@ -188,6 +191,26 @@ function parseAdditionalAttendeeEntries(raw: string) {
     });
 }
 
+function getWorkflowSessionTime(value: string | null) {
+  const time = Date.parse(value ?? "");
+  return Number.isNaN(time) ? 0 : time;
+}
+
+function writeSharedSnapshotToLocalStorage(snapshot: WorkflowStorageSnapshot) {
+  window.localStorage.setItem(
+    WORKFLOW_SESSION_STORAGE_KEY,
+    JSON.stringify(snapshot.workflowSession),
+  );
+  window.localStorage.setItem(
+    JIRA_STORAGE_KEY,
+    JSON.stringify(snapshot.jiraSettings),
+  );
+  window.localStorage.setItem(
+    OUTLOOK_STORAGE_KEY,
+    JSON.stringify(snapshot.outlookSettings),
+  );
+}
+
 type SourceSummaryCardProps = {
   title: string;
   fileName: string | null;
@@ -260,33 +283,76 @@ export function MeetingWorkspacePage() {
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    setJiraSettings(
-      parseStoredJiraSettings(window.localStorage.getItem(JIRA_STORAGE_KEY)),
-    );
-    setOutlookSettings(
-      parseStoredOutlookSettings(
-        window.localStorage.getItem(OUTLOOK_STORAGE_KEY),
-      ),
-    );
-    const workflowSession = parseStoredWorkflowSession(
-      window.localStorage.getItem(WORKFLOW_SESSION_STORAGE_KEY),
-    );
+    let isActive = true;
 
-    if (workflowSession.transcript) {
-      setTranscript(workflowSession.transcript);
-      setSelectedFileName(workflowSession.selectedFileName);
-      setSourceMessage(workflowSession.sourceMessage);
-      setAnalysis(workflowSession.analysis);
-      setActiveWorkflowTab(
-        workflowSession.analysis
-          ? "review"
-          : workflowSession.transcript
+    function applyWorkflowSnapshot(snapshot: WorkflowStorageSnapshot) {
+      setJiraSettings(snapshot.jiraSettings);
+      setOutlookSettings(snapshot.outlookSettings);
+
+      if (snapshot.workflowSession.transcript) {
+        setTranscript(snapshot.workflowSession.transcript);
+        setSelectedFileName(snapshot.workflowSession.selectedFileName);
+        setSourceMessage(snapshot.workflowSession.sourceMessage);
+        setAnalysis(snapshot.workflowSession.analysis);
+        setActiveWorkflowTab(
+          snapshot.workflowSession.analysis
             ? "review"
-            : "intake",
-      );
+            : snapshot.workflowSession.transcript
+              ? "review"
+              : "intake",
+        );
+      }
     }
 
-    setIsStorageReady(true);
+    async function loadStoredWorkflowState() {
+      const localSnapshot = {
+        workflowSession: parseStoredWorkflowSession(
+          window.localStorage.getItem(WORKFLOW_SESSION_STORAGE_KEY),
+        ),
+        jiraSettings: parseStoredJiraSettings(
+          window.localStorage.getItem(JIRA_STORAGE_KEY),
+        ),
+        outlookSettings: parseStoredOutlookSettings(
+          window.localStorage.getItem(OUTLOOK_STORAGE_KEY),
+        ),
+        updatedAt: parseStoredWorkflowSession(
+          window.localStorage.getItem(WORKFLOW_SESSION_STORAGE_KEY),
+        ).updatedAt,
+      };
+
+      applyWorkflowSnapshot(localSnapshot);
+
+      try {
+        const response = await fetch("/api/workflow-state", {
+          cache: "no-store",
+        });
+        const sharedSnapshot = parseWorkflowStorageSnapshot(
+          await response.json(),
+        );
+        const shouldUseShared =
+          hasWorkflowStorageSnapshotData(sharedSnapshot) &&
+          (!hasWorkflowStorageSnapshotData(localSnapshot) ||
+            getWorkflowSessionTime(sharedSnapshot.updatedAt) >
+              getWorkflowSessionTime(localSnapshot.updatedAt));
+
+        if (isActive && response.ok && shouldUseShared) {
+          writeSharedSnapshotToLocalStorage(sharedSnapshot);
+          applyWorkflowSnapshot(sharedSnapshot);
+        }
+      } catch {
+        // Browser localStorage remains the fallback if shared dev-session sync is unavailable.
+      } finally {
+        if (isActive) {
+          setIsStorageReady(true);
+        }
+      }
+    }
+
+    void loadStoredWorkflowState();
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   useEffect(() => {
