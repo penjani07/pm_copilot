@@ -13,6 +13,7 @@ import Link from "next/link";
 
 import type { ActionItem } from "@/lib/types";
 import { useWorkflowSnapshot } from "@/lib/use-workflow-snapshot";
+import { DonutGauge, SegmentedBar } from "@/components/visual-metrics";
 
 const TRACKER_STEPS = [
   "Upload Meeting",
@@ -57,8 +58,7 @@ export function ActionsWorkflowPage() {
                 Review AI action items before they touch delivery systems
               </h1>
               <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-500">
-                This stage keeps a PM in control: validate ownership, blockers, due dates,
-                and confidence before anything moves into Jira or downstream orchestration.
+                Validate owners, blockers, dates, and confidence before Jira sync.
               </p>
             </div>
             <div className="grid gap-3 md:grid-cols-6">
@@ -89,8 +89,19 @@ export function ActionsWorkflowPage() {
                 {actionItems.length ? `${actionItems.length} extracted tasks` : "Awaiting action items"}
               </h2>
               <p className="mt-3 text-sm leading-7 text-slate-500">
-                This queue is now driven by the actual analyzed meeting session instead of static sample cards.
+                Live queue from the analyzed meeting.
               </p>
+              <div className="mt-4">
+                <DonutGauge
+                  label="Approval Readiness"
+                  value={
+                    actionItems.length
+                      ? Math.round((readyItems.length / actionItems.length) * 100)
+                      : 0
+                  }
+                  tone={readyItems.length >= reviewItems.length ? "emerald" : "amber"}
+                />
+              </div>
             </section>
 
             <section className="rounded-3xl border border-white/20 bg-white/70 p-4 shadow-lg shadow-black/5 backdrop-blur-md">
@@ -98,6 +109,12 @@ export function ActionsWorkflowPage() {
                 Queue signals
               </div>
               <div className="space-y-3">
+                <SegmentedBar
+                  segments={[
+                    { label: "Review", value: reviewItems.length, className: "bg-amber-500" },
+                    { label: "Ready", value: readyItems.length, className: "bg-emerald-500" },
+                  ]}
+                />
                 {[
                   ["Needs review", `${reviewItems.length}`],
                   ["Ready to sync", `${readyItems.length}`],
@@ -117,8 +134,7 @@ export function ActionsWorkflowPage() {
               <div className="rounded-3xl border border-white/20 bg-white/70 p-8 shadow-lg shadow-black/5 backdrop-blur-md">
                 <h2 className="text-2xl font-semibold text-slate-950">No approved action queue yet</h2>
                 <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-500">
-                  Run AI analysis from the workspace first. Then this page will show the real action
-                  items extracted from your meeting and split them into review and sync lanes.
+                  Run AI analysis to split real tasks into review and sync lanes.
                 </p>
                 <Link
                   href="/"
@@ -264,16 +280,16 @@ export function ActionsWorkflowPage() {
                   <p className="text-sm font-medium text-slate-100">Blocking signals</p>
                   <p className="mt-2 text-sm leading-7 text-slate-300">
                     {reviewItems.length
-                      ? `${reviewItems.length} tasks still need PM clarification before sync.`
-                      : "No blocker-rich tasks remain in the current review queue."}
+                      ? `${reviewItems.length} tasks need PM clarification.`
+                      : "No blocker-rich tasks remain."}
                   </p>
                 </div>
                 <div className="rounded-2xl bg-white/10 p-4">
                   <p className="text-sm font-medium text-slate-100">Jira readiness</p>
                   <p className="mt-2 text-sm leading-7 text-slate-300">
                     {isJiraReady
-                      ? "Jira is connected, so ready items can progress directly into sync."
-                      : "Connect Jira in settings before the ready lane can move into creation."}
+                      ? "Jira connected. Ready items can sync."
+                      : "Connect Jira before creation."}
                   </p>
                 </div>
               </div>

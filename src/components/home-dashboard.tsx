@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { DonutGauge, SegmentedBar, SparkBars } from "@/components/visual-metrics";
+
 const STATS = [
   {
     label: "Programs on Track",
@@ -90,9 +92,7 @@ export function HomeDashboard() {
           meeting notes.
         </h1>
         <p className="mt-3 max-w-4xl text-base text-slate-500">
-          Inspired by the organized feel of modern work-management platforms.
-          PMO Copilot acts as a polished operations layer: structured, visual,
-          data-rich, and built for rapid team execution.
+          A structured command layer for meetings, actions, risk, and executive visibility.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
           <Link
@@ -125,6 +125,28 @@ export function HomeDashboard() {
               </span>
             </div>
             <p className="mt-1 text-xs text-slate-500">{stat.detail}</p>
+            <div className="mt-4">
+              <SparkBars
+                values={
+                  stat.label === "Programs on Track"
+                    ? [14, 15, 17, 18]
+                    : stat.label === "Decisions Captured"
+                      ? [72, 81, 88, 96]
+                      : stat.label === "Escalations Prevented"
+                        ? [4, 6, 9, 11]
+                        : [64, 71, 76, 82]
+                }
+                tone={
+                  stat.label === "Programs on Track"
+                    ? "bg-amber-500"
+                    : stat.label === "Decisions Captured"
+                      ? "bg-emerald-500"
+                      : stat.label === "Escalations Prevented"
+                        ? "bg-slate-800"
+                        : "bg-indigo-500"
+                }
+              />
+            </div>
           </div>
         ))}
       </div>
@@ -136,6 +158,15 @@ export function HomeDashboard() {
           </h2>
 
           <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-100 p-4">
+              <SegmentedBar
+                segments={[
+                  { label: "Done", value: 2, className: "bg-emerald-500" },
+                  { label: "Review", value: 1, className: "bg-amber-500" },
+                  { label: "Queued", value: 3, className: "bg-slate-300" },
+                ]}
+              />
+            </div>
             <ul className="divide-y divide-slate-200">
               {PIPELINE_STEPS.map((item) => (
                 <li
@@ -160,7 +191,9 @@ export function HomeDashboard() {
                         {item.status}
                       </span>
                     </div>
-                    <p className="mt-1 text-sm text-slate-500">{item.desc}</p>
+                    <p className="mt-1 text-sm text-slate-500">
+                      {item.desc}
+                    </p>
                   </div>
                 </li>
               ))}
@@ -173,6 +206,7 @@ export function HomeDashboard() {
             Integration Posture
           </h2>
           <div className="space-y-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <DonutGauge label="Automation readiness" value={68} tone="indigo" />
             {INTEGRATION_POSTURE.map((item, index) => (
               <div
                 key={item.label}

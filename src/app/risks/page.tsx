@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { HeatStrip, SparkBars } from "@/components/visual-metrics";
 import { SiteShell } from "@/components/site-shell";
 import styles from "@/components/execution-page.module.css";
 import { RISK_SIGNALS, type RiskTab } from "@/lib/execution-content";
@@ -46,11 +47,7 @@ export default async function RisksPage({
           <div className={styles.heroPanel}>
             <span className={styles.eyebrow}>Program Risk Intelligence</span>
             <h1>Detect delivery drift before it becomes a status surprise.</h1>
-            <p>
-              This screen is the executive-grade intelligence layer: repeated
-              blockers, overdue owners, missing governance fields, and
-              stakeholder friction all roll into a single heatmap view.
-            </p>
+            <p>Repeated blockers, owner gaps, governance misses, and stakeholder friction.</p>
             <div className={styles.heroMeta}>
               <span>Repeated blocker detection</span>
               <span>Missed deadline awareness</span>
@@ -62,15 +59,13 @@ export default async function RisksPage({
             <div className={styles.metricCard}>
               <span>Active lens</span>
               <strong>{TAB_LABELS[activeTab]} risk</strong>
-              <p>Tabs separate execution issues from governance and stakeholder posture.</p>
+              <p>{filtered.length} active signals</p>
+              <SparkBars values={[2, 4, filtered.length, 5, 3]} tone="bg-rose-500" />
             </div>
             <div className={styles.metricCard}>
               <span>Use case</span>
               <strong>PMO early warning system</strong>
-              <p>
-                The goal is less firefighting and more structured escalation with
-                clear reasons.
-              </p>
+              <p>Escalate with evidence, not anecdotes.</p>
             </div>
           </div>
         </section>
@@ -79,10 +74,7 @@ export default async function RisksPage({
           <div className={styles.panelHeader}>
             <div>
               <h2>Risk heatmap</h2>
-              <p>
-                Slice the signals by category and review them in small batches so
-                the screen stays sharp instead of overwhelming.
-              </p>
+              <p>Filter by category, scan the hot spots, act on the next step.</p>
             </div>
             <div className={styles.tabs}>
               {(Object.keys(TAB_LABELS) as RiskTab[]).map((tab) => (
@@ -95,6 +87,16 @@ export default async function RisksPage({
                 </Link>
               ))}
             </div>
+          </div>
+
+          <div className="mb-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <HeatStrip
+              cells={[
+                { label: "Delivery", level: activeTab === "delivery" ? "high" : "medium" },
+                { label: "Governance", level: activeTab === "governance" ? "high" : "low" },
+                { label: "Stakeholder", level: activeTab === "stakeholder" ? "high" : "medium" },
+              ]}
+            />
           </div>
 
           <div className={styles.tableWrap}>
@@ -142,10 +144,7 @@ export default async function RisksPage({
           <div className={styles.panelHeader}>
             <div>
               <h2>What the engine looks for</h2>
-              <p>
-                Risk is not just schedule slip. It is governance quality,
-                accountability health, and stakeholder temperature too.
-              </p>
+              <p>Four signal families power the heatmap.</p>
             </div>
           </div>
 
@@ -153,22 +152,22 @@ export default async function RisksPage({
             <article className={styles.riskCard}>
               <span className={styles.pill}>Governance</span>
               <h3>Missing owners and due dates</h3>
-              <p>Flags action items that cannot be operationalized responsibly.</p>
+              <p>Unowned work cannot move.</p>
             </article>
             <article className={styles.riskCard}>
               <span className={styles.pill}>Dependencies</span>
               <h3>Blocked cross-team execution</h3>
-              <p>Tracks unresolved handoffs that create invisible critical paths.</p>
+              <p>Hidden paths become visible.</p>
             </article>
             <article className={styles.riskCard}>
               <span className={styles.pill}>Sentiment</span>
               <h3>Escalation likelihood</h3>
-              <p>Interprets repeated frustration, disagreement, or confusion in program calls.</p>
+              <p>Friction becomes a signal.</p>
             </article>
             <article className={styles.riskCard}>
               <span className={styles.pill}>Memory</span>
               <h3>Recurring blockers</h3>
-              <p>Uses organizational memory to show when the same issue keeps reappearing.</p>
+              <p>Repeat issues get surfaced.</p>
             </article>
           </div>
         </section>

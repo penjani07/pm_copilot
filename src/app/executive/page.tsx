@@ -1,3 +1,4 @@
+import { DonutGauge, SegmentedBar, SparkBars } from "@/components/visual-metrics";
 import { SiteShell } from "@/components/site-shell";
 import styles from "@/components/execution-page.module.css";
 import { CHAT_PROMPTS, EXECUTIVE_HIGHLIGHTS } from "@/lib/execution-content";
@@ -10,11 +11,7 @@ export default function ExecutivePage() {
           <div className={styles.heroPanel}>
             <span className={styles.eyebrow}>Executive Summary</span>
             <h1>Brief leadership with program truth, not meeting fragments.</h1>
-            <p>
-              This screen packages weekly summaries, project health, delivery
-              risk, key achievements, milestones, and governance posture for
-              directors, VPs, and PMO leadership.
-            </p>
+            <p>Weekly health, risks, milestones, decisions, and leadership asks.</p>
             <div className={styles.heroMeta}>
               <span>Weekly leadership summary</span>
               <span>Governance status</span>
@@ -26,18 +23,13 @@ export default function ExecutivePage() {
             <div className={styles.metricCard}>
               <span>Audience</span>
               <strong>Program directors and PMOs</strong>
-              <p>
-                The executive view distills the operating picture into decisions,
-                risk, asks, and momentum.
-              </p>
+              <p>Decisions, risks, asks, momentum.</p>
+              <SparkBars values={[62, 66, 71, 77, 82, 89]} tone="bg-indigo-500" />
             </div>
             <div className={styles.metricCard}>
               <span>Outcome</span>
               <strong>Continuous briefings</strong>
-              <p>
-                Instead of manually assembling updates, the assistant keeps a
-                living narrative for leadership consumption.
-              </p>
+              <p>Always-current leadership narrative.</p>
             </div>
           </div>
         </section>
@@ -46,10 +38,7 @@ export default function ExecutivePage() {
           <div className={styles.panelHeader}>
             <div>
               <h2>Leadership highlights</h2>
-              <p>
-                This is the concise briefing layer that rolls up execution,
-                blockers, milestones, and governance quality.
-              </p>
+              <p>Execution, blockers, milestones, governance.</p>
             </div>
           </div>
 
@@ -68,10 +57,20 @@ export default function ExecutivePage() {
           <div className={styles.panelHeader}>
             <div>
               <h2>Governance snapshot</h2>
-              <p>
-                A leadership surface still needs operational evidence beneath the
-                summary so the PMO can trust the story.
-              </p>
+              <p>Evidence behind the narrative.</p>
+            </div>
+          </div>
+
+          <div className="mb-5 grid gap-4 lg:grid-cols-[260px_minmax(0,1fr)]">
+            <DonutGauge label="Governance Compliance" value={89} tone="emerald" />
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <SegmentedBar
+                segments={[
+                  { label: "Healthy", value: 18, className: "bg-emerald-500" },
+                  { label: "Watch", value: 5, className: "bg-amber-500" },
+                  { label: "Escalate", value: 1, className: "bg-rose-500" },
+                ]}
+              />
             </div>
           </div>
 
@@ -79,22 +78,22 @@ export default function ExecutivePage() {
             <article className={styles.summaryCard}>
               <span className={styles.label}>Delivery health</span>
               <strong>On watch</strong>
-              <p>Release 5.2 progress is real, but dependency closure remains the gating signal.</p>
+              <p>Dependency closure is gating.</p>
             </article>
             <article className={styles.summaryCard}>
               <span className={styles.label}>Governance compliance</span>
               <strong>89%</strong>
-              <p>Owner coverage is strong. Due-date completeness is the main gap left.</p>
+              <p>Due-date completeness is the gap.</p>
             </article>
             <article className={styles.summaryCard}>
               <span className={styles.label}>Escalation posture</span>
               <strong>Moderate</strong>
-              <p>Leadership should expect one support ask if security approval slips again.</p>
+              <p>One support ask likely.</p>
             </article>
             <article className={styles.summaryCard}>
               <span className={styles.label}>Cross-team dependencies</span>
               <strong>18 tracked</strong>
-              <p>8 of them are directly tied to the current release milestone path.</p>
+              <p>8 sit on milestone path.</p>
             </article>
           </div>
         </section>
@@ -103,10 +102,7 @@ export default function ExecutivePage() {
           <div className={styles.panelHeader}>
             <div>
               <h2>AI chat assistant prompts</h2>
-              <p>
-                Leadership and PMOs can interrogate the portfolio directly
-                instead of waiting for a custom report.
-              </p>
+              <p>Ask the portfolio directly.</p>
             </div>
           </div>
 

@@ -13,6 +13,7 @@ import { useMemo, useState } from "react";
 
 import type { ActionItem, Confidence } from "@/lib/types";
 import { useWorkflowSnapshot } from "@/lib/use-workflow-snapshot";
+import { DonutGauge, SegmentedBar } from "@/components/visual-metrics";
 
 const WORKFLOW_STEPS = [
   { name: "Upload Meeting", desc: "Source evidence" },
@@ -190,7 +191,7 @@ export function DeliveryWorkflowPage() {
             Guided delivery execution
           </h1>
           <p className="mt-0.5 text-sm text-slate-500">
-            The assistant tracks delivery milestones step-by-step using live meeting data.
+            Milestones, review queues, risks, and sync readiness in one view.
           </p>
         </div>
 
@@ -209,6 +210,17 @@ export function DeliveryWorkflowPage() {
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-4">
         <div className="space-y-4 xl:col-span-1">
           <div className="rounded-xl border border-slate-200 bg-white p-4">
+            <SegmentedBar
+              segments={[
+                { label: "Done", value: activeIndex, className: "bg-emerald-500" },
+                { label: "Active", value: 1, className: "bg-amber-500" },
+                {
+                  label: "Pending",
+                  value: Math.max(WORKFLOW_STEPS.length - activeIndex - 1, 0),
+                  className: "bg-slate-300",
+                },
+              ]}
+            />
             <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
               Workflow Map
             </h3>
@@ -260,6 +272,10 @@ export function DeliveryWorkflowPage() {
               <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/10">
                 {model.confidence}% Confidence
               </span>
+            </div>
+
+            <div className="mt-4">
+              <DonutGauge label="Delivery Confidence" value={model.confidence} tone="emerald" />
             </div>
 
             <div className="mt-4 grid grid-cols-3 gap-4 border-b border-slate-100 pb-4">
@@ -360,8 +376,7 @@ export function DeliveryWorkflowPage() {
                 </span>
                 <h4 className="mt-1 text-xs font-bold text-white">{model.nextStep}</h4>
                 <p className="mt-1 text-[11px] leading-relaxed text-slate-300">
-                  The model recommends scheduling an automated context review session with
-                  cross-functional stakeholders.
+                  Recommended review with cross-functional owners.
                 </p>
                 <div className="mt-3 flex flex-col gap-1.5">
                   <button

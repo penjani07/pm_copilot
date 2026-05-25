@@ -41,6 +41,7 @@ import {
   type WorkflowStorageSnapshot,
 } from "@/lib/workflow-storage";
 import { notifyWorkflowSnapshotChanged } from "@/lib/use-workflow-snapshot";
+import { SparkBars } from "@/components/visual-metrics";
 
 import styles from "@/app/page.module.css";
 
@@ -90,21 +91,21 @@ const WORKFLOW_TAB_META: Record<
 > = {
   intake: {
     description:
-      "Pull in notes, files, or transcripts so the workspace starts with a clean source of truth.",
+      "Add notes, files, or transcripts as the source of truth.",
     eyebrow: "Stage 01",
     heading: "Capture the meeting source.",
     step: "01",
   },
   review: {
     description:
-      "Run analysis, then inspect the meeting summary, agenda briefs, and extracted work before shipping anything.",
+      "Inspect summary, risks, agenda briefs, and extracted work.",
     eyebrow: "Stage 02",
     heading: "Review what the AI understood.",
     step: "02",
   },
   deliver: {
     description:
-      "Package the output into Jira work and a follow-up meeting plan once the analysis looks right.",
+      "Create Jira work and follow-up plans after review.",
     eyebrow: "Stage 03",
     heading: "Move the work into delivery.",
     step: "03",
@@ -913,13 +914,10 @@ export function MeetingWorkspacePage() {
       <div className={styles.page}>
       <header className={styles.hero}>
         <div className={styles.heroCopy}>
-          <span className={styles.eyebrow}>AI Program Execution Assistant</span>
-          <h1>Turn meeting evidence into owned execution, delivery follow-through, and PMO visibility.</h1>
+          <span className={styles.eyebrow}>AI PMO workspace</span>
+          <h1>PMO Copilot</h1>
           <p>
-            This workspace is the operational core of PMO Copilot. Ingest a
-            meeting transcript, refine the minutes, approve action items,
-            connect Jira and Outlook, and carry the conversation all the way
-            into accountable execution.
+            Convert meeting notes into clear decisions, owners, risks, and delivery actions.
           </p>
 
           <div className={styles.heroActions}>
@@ -941,12 +939,20 @@ export function MeetingWorkspacePage() {
 
           <div className={styles.heroMeta}>
             <span>Ingest -&gt; review -&gt; deliver</span>
-            <span>Approval-first Jira and Outlook flow</span>
+            <span>Jira and Outlook handoff</span>
             <span>{activeWorkflowMeta.heading}</span>
           </div>
         </div>
 
         <div className={styles.heroStats}>
+          <div className="rounded-[16px] border border-slate-900 bg-slate-950 p-4 text-white">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">
+              Workflow Pulse
+            </span>
+            <div className="mt-3">
+              <SparkBars values={[2, 5, wordCount ? 8 : 1, analysis ? 10 : 3]} tone="bg-teal-300" />
+            </div>
+          </div>
           {workflowTabs.map((tab) => (
             <button
               key={tab.id}
@@ -993,7 +999,7 @@ export function MeetingWorkspacePage() {
           <span className={styles.summaryLabel}>Configuration</span>
           <h2>Jira, Outlook, and AI setup</h2>
           <p>
-            Configure destination tools and check whether AI analysis is available.
+            Connect destination tools once, then keep the workflow focused.
           </p>
           <div className={styles.configRailStatus}>
             <span className={isJiraReady ? styles.readyDot : styles.setupDot} />
@@ -1019,10 +1025,9 @@ export function MeetingWorkspacePage() {
           <div className={styles.settingsPanelHeader}>
             <div>
               <span className={styles.eyebrow}>Configuration</span>
-              <h2>Configure Jira, Outlook, and AI analysis.</h2>
+              <h2>Connect the tools PMs use every day.</h2>
               <p>
-                Tool setup lives outside the numbered workflow so intake, review, and delivery stay
-                focused while integrations remain available from every stage.
+                Jira, Outlook, and OpenAI setup stays separate from the core workflow.
               </p>
             </div>
             <button
@@ -1324,9 +1329,7 @@ export function MeetingWorkspacePage() {
                 <div>
                   <h2>Upload meeting source</h2>
                   <p>
-                    Start with the transcript or meeting file. The next stages
-                    handle AI-refined minutes, action approval, and delivery
-                    system follow-through.
+                    Drop in a transcript or meeting file. Review and delivery unlock after intake.
                   </p>
                 </div>
               {selectedFileName ? (
@@ -1419,9 +1422,7 @@ export function MeetingWorkspacePage() {
                   <span className={styles.eyebrow}>Execution map</span>
                   <h2>Built for structured follow-through</h2>
                   <p>
-                    The workflow is intentionally staged so one meeting can turn
-                    into refined minutes, owned actions, enterprise tool sync,
-                    and governance-ready output without clutter.
+                    One source becomes reviewable minutes, owned work, and delivery-ready output.
                   </p>
                 </div>
               </div>
@@ -1434,8 +1435,7 @@ export function MeetingWorkspacePage() {
                 <div className={styles.summaryBlock}>
                   <span className={styles.summaryLabel}>Next outcome</span>
                   <p>
-                    Review shows the transcript, AI-refined minutes, owners,
-                    risks, blockers, and execution-ready follow-ups.
+                    Review highlights summary, owners, risks, blockers, and follow-ups.
                   </p>
                 </div>
                 <div className={styles.summaryBlock}>

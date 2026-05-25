@@ -1,14 +1,14 @@
 .page {
   width: min(1320px, calc(100vw - 32px));
   margin: 0 auto;
-  padding: 10px 0 88px;
+  padding: 0 0 64px;
 }
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.95fr);
-  gap: 24px;
-  margin-bottom: 28px;
+  grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.75fr);
+  gap: 18px;
+  margin-bottom: 22px;
 }
 
 .heroCopy,
@@ -26,30 +26,29 @@
 .heroCopy {
   position: relative;
   overflow: hidden;
-  border-radius: 36px;
-  padding: 48px;
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(15, 23, 42, 0.08);
+  border-radius: 24px;
+  padding: 34px;
   background:
-    radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 34%),
-    radial-gradient(circle at bottom right, rgba(244, 114, 182, 0.12), transparent 28%),
-    linear-gradient(135deg, #0b1220, #111827 42%, #1f355d 100%);
+    linear-gradient(135deg, rgba(17, 24, 39, 0.96), rgba(15, 23, 42, 0.92)),
+    linear-gradient(90deg, rgba(20, 184, 166, 0.18), rgba(245, 158, 11, 0.14));
   color: #f8fafc;
-  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.16);
+  box-shadow: 0 20px 44px rgba(15, 23, 42, 0.12);
 }
 
 .heroCopy h1 {
-  max-width: 12ch;
-  margin: 14px 0 18px;
-  font-size: clamp(2.9rem, 3.5vw, 4.5rem);
-  line-height: 0.92;
-  letter-spacing: -0.07em;
+  max-width: 14ch;
+  margin: 12px 0 14px;
+  font-size: clamp(2.2rem, 3vw, 3.7rem);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
 }
 
 .heroCopy p {
-  max-width: 58ch;
+  max-width: 52ch;
   color: rgba(226, 232, 240, 0.82);
-  font-size: 1.02rem;
-  line-height: 1.9;
+  font-size: 1rem;
+  line-height: 1.65;
 }
 
 .eyebrow {
@@ -66,9 +65,9 @@
 .heroStats {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  border-radius: 36px;
-  padding: 20px;
+  gap: 12px;
+  border-radius: 24px;
+  padding: 14px;
   backdrop-filter: blur(18px);
 }
 
@@ -76,9 +75,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
-  border-radius: 24px;
-  padding: 20px;
+  gap: 10px;
+  border-radius: 16px;
+  padding: 16px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   background: rgba(255, 255, 255, 0.82);
   color: var(--ink);
@@ -133,29 +132,29 @@
 }
 
 .statTitle {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: -0.03em;
 }
 
 .statLabel {
   color: var(--ink-soft);
-  font-size: 0.92rem;
-  line-height: 1.5;
+  font-size: 0.86rem;
+  line-height: 1.42;
 }
 
 .heroActions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 30px;
+  margin-top: 22px;
 }
 
 .heroMeta {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 16px;
 }
 
 .heroMeta span {
@@ -168,27 +167,27 @@
 
 .workflowRail {
   position: sticky;
-  top: 96px;
+  top: 78px;
   z-index: 10;
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .workflowNav {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
-  padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 32px;
-  background: rgba(255, 255, 255, 0.72);
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.86);
   backdrop-filter: blur(16px);
 }
 
 .appWorkspace {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
-  gap: 28px;
+  grid-template-columns: 248px minmax(0, 1fr);
+  gap: 20px;
   align-items: start;
 }
 
@@ -198,10 +197,10 @@
 
 .workflowNavButton {
   display: grid;
-  gap: 6px;
+  gap: 4px;
   border: 1px solid transparent;
-  border-radius: 24px;
-  padding: 16px 18px;
+  border-radius: 12px;
+  padding: 12px;
   background: transparent;
   color: var(--ink-soft);
   text-align: left;
@@ -214,9 +213,9 @@
 }
 
 .workflowNavButton:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.72);
-  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
 }
 
 .workflowNavButton span,
@@ -253,13 +252,11 @@
 
 .configRailCard {
   display: grid;
-  gap: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 28px;
-  padding: 18px;
-  background:
-    radial-gradient(circle at top right, rgba(21, 110, 103, 0.08), transparent 42%),
-    rgba(255, 255, 255, 0.74);
+  gap: 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.86);
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(16px);
 }
@@ -271,8 +268,8 @@
 
 .configRailCard p {
   color: var(--ink-soft);
-  font-size: 0.9rem;
-  line-height: 1.55;
+  font-size: 0.86rem;
+  line-height: 1.45;
 }
 
 .configRailCard button {
@@ -306,25 +303,25 @@
 
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.92fr);
-  gap: 28px;
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.82fr);
+  gap: 20px;
   align-items: start;
 }
 
 .panel {
-  border-radius: 32px;
-  padding: 30px;
+  border-radius: 20px;
+  padding: 22px;
   backdrop-filter: blur(12px);
 }
 
 .sidebar {
   display: grid;
-  gap: 28px;
+  gap: 18px;
 }
 
 .workflowStage {
-  margin-bottom: 32px;
-  scroll-margin-top: 104px;
+  margin-bottom: 24px;
+  scroll-margin-top: 84px;
 }
 
 .workflowStageActive {
@@ -336,29 +333,27 @@
 }
 
 .stageIntro {
-  margin-bottom: 22px;
+  margin-bottom: 16px;
 }
 
 .stageIntro h2 {
-  margin: 10px 0 12px;
-  font-size: clamp(2.2rem, 2.9vw, 3.35rem);
-  line-height: 0.94;
-  letter-spacing: -0.06em;
+  margin: 8px 0 8px;
+  font-size: clamp(1.8rem, 2.4vw, 2.7rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
 }
 
 .stageIntro p {
-  max-width: 62ch;
+  max-width: 56ch;
   color: var(--ink-soft);
-  line-height: 1.85;
+  line-height: 1.6;
 }
 
 .settingsPanel {
   display: grid;
-  gap: 22px;
-  margin-bottom: 28px;
-  background:
-    radial-gradient(circle at top right, rgba(21, 110, 103, 0.08), transparent 34%),
-    rgba(255, 255, 255, 0.9);
+  gap: 18px;
+  margin-bottom: 22px;
+  background: rgba(255, 255, 255, 0.94);
 }
 
 .settingsPanelHeader {
@@ -369,8 +364,8 @@
 }
 
 .settingsPanelHeader h2 {
-  margin: 8px 0 8px;
-  font-size: clamp(1.7rem, 2vw, 2.35rem);
+  margin: 8px 0;
+  font-size: clamp(1.45rem, 1.8vw, 2rem);
   line-height: 1;
   letter-spacing: -0.05em;
 }
@@ -402,11 +397,11 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .panelHeader h2 {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   letter-spacing: -0.03em;
 }
 
@@ -507,8 +502,8 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 144px;
-  margin-bottom: 16px;
+  min-height: 124px;
+  margin-bottom: 14px;
   border: 1.5px dashed rgba(21, 110, 103, 0.32);
   border-radius: 22px;
   background: linear-gradient(135deg, rgba(237, 247, 246, 0.94), rgba(255, 250, 243, 0.98));
@@ -541,7 +536,7 @@
 
 .transcriptInput {
   width: 100%;
-  min-height: 320px;
+  min-height: 260px;
   padding: 18px 18px 20px;
   border: 1px solid var(--border-subtle);
   border-radius: 20px;
@@ -564,7 +559,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .toolbarMeta {
@@ -583,8 +578,8 @@
 
 .primaryButton,
 .secondaryButton {
-  border-radius: 999px;
-  padding: 13px 18px;
+  border-radius: 12px;
+  padding: 11px 15px;
   font: inherit;
   font-weight: 700;
   cursor: pointer;
@@ -641,7 +636,7 @@
 }
 
 .fileChip {
-  padding: 8px 12px;
+  padding: 7px 10px;
   background: rgba(21, 110, 103, 0.08);
   color: var(--accent-strong);
 }
@@ -649,8 +644,8 @@
 .sourceSummaryCard {
   display: grid;
   gap: 12px;
-  margin-top: 14px;
-  padding: 16px 18px;
+  margin-top: 12px;
+  padding: 14px;
   border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.72);
@@ -683,8 +678,10 @@
 
 .sourcePreview {
   margin: 0;
-  padding: 14px 16px;
-  border-radius: 16px;
+  max-height: 180px;
+  overflow: auto;
+  padding: 12px 14px;
+  border-radius: 12px;
   background: rgba(247, 249, 252, 0.92);
   color: var(--ink-soft);
   line-height: 1.65;
@@ -796,17 +793,17 @@
 }
 
 .resultsHeader h2 {
-  max-width: 14ch;
+  max-width: 22ch;
   margin-top: 10px;
-  font-size: clamp(1.9rem, 2vw, 2.6rem);
-  line-height: 1;
+  font-size: clamp(1.55rem, 1.9vw, 2.2rem);
+  line-height: 1.05;
   letter-spacing: -0.05em;
 }
 
 .resultsGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
+  gap: 18px;
 }
 
 .actionPanel {

@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 
 import { useWorkflowSnapshot } from "@/lib/use-workflow-snapshot";
+import { DonutGauge, SegmentedBar, SparkBars } from "@/components/visual-metrics";
 
 const TRACKER_STEPS = [
   "Upload Meeting",
@@ -52,9 +53,7 @@ export function MinutesWorkflowPage() {
                   Review the meeting as a trusted operating record
                 </h1>
                 <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-500">
-                  Run AI analysis in the workspace first. Then this page will show the
-                  refined meeting record, transcript evidence, extracted owners, and
-                  follow-up logic.
+                  Run AI analysis to unlock minutes, owners, risks, and follow-up logic.
                 </p>
               </div>
             </div>
@@ -63,8 +62,7 @@ export function MinutesWorkflowPage() {
           <div className="rounded-3xl border border-white/20 bg-white/70 p-8 shadow-lg shadow-black/5 backdrop-blur-md">
             <h2 className="text-2xl font-semibold text-slate-950">No analyzed meeting yet</h2>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-500">
-              Upload a meeting and run AI analysis first. This minutes screen is now
-              bound to your real workflow session, not static demo content.
+              Upload a meeting and run AI analysis first.
             </p>
             <Link
               href="/"
@@ -101,8 +99,7 @@ export function MinutesWorkflowPage() {
                 Review the meeting as a trusted operating record
               </h1>
               <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-500">
-                This stage turns the transcript into refined MoM, decisions, owners,
-                blockers, and follow-up signals before action routing begins.
+                Refined minutes, decisions, owners, blockers, and follow-up signals.
               </p>
             </div>
             <div className="grid gap-3 md:grid-cols-6">
@@ -154,6 +151,15 @@ export function MinutesWorkflowPage() {
                   </div>
                 ))}
               </div>
+              <div className="mt-4">
+                <SegmentedBar
+                  segments={[
+                    { label: "Agenda", value: analysis.agendaSections.length, className: "bg-indigo-500" },
+                    { label: "Actions", value: analysis.actionItems.length, className: "bg-emerald-500" },
+                    { label: "People", value: analysis.participants.length, className: "bg-amber-500" },
+                  ]}
+                />
+              </div>
             </section>
           </aside>
 
@@ -188,6 +194,17 @@ export function MinutesWorkflowPage() {
                     </div>
                     <h2 className="mt-4 text-2xl font-semibold text-slate-950">{analysis.meetingTitle}</h2>
                     <p className="mt-3 text-sm leading-7 text-slate-600">{analysis.conciseSummary}</p>
+                    <div className="mt-4">
+                      <SparkBars
+                        values={[
+                          transcriptLines.length,
+                          analysis.agendaSections.length,
+                          analysis.actionItems.length,
+                          analysis.participants.length,
+                        ]}
+                        tone="bg-sky-500"
+                      />
+                    </div>
                   </article>
 
                   <article className="rounded-2xl border border-white/20 bg-white/80 p-6 shadow-lg shadow-black/5">
@@ -237,6 +254,9 @@ export function MinutesWorkflowPage() {
             <section className="rounded-3xl border border-white/20 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-6 text-white shadow-lg shadow-black/10">
               <p className="text-sm text-slate-300">AI insights</p>
               <h2 className="mt-2 text-2xl font-semibold">MoM intelligence</h2>
+              <div className="mt-4">
+                <DonutGauge label="Record Completeness" value={88} tone="indigo" />
+              </div>
               <div className="mt-4 space-y-3">
                 <div className="rounded-2xl bg-white/10 p-4">
                   <div className="flex items-center gap-2 text-sm text-slate-200">
@@ -251,7 +271,7 @@ export function MinutesWorkflowPage() {
                     Participants
                   </div>
                   <p className="mt-2 text-sm leading-7 text-slate-300">
-                    {analysis.participants.length} participant signals resolved for ownership context.
+                    {analysis.participants.length} participant signals resolved.
                   </p>
                 </div>
               </div>

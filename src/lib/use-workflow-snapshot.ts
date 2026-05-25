@@ -30,6 +30,12 @@ type WorkflowSnapshotState = {
 };
 
 const WORKFLOW_STORAGE_UPDATED_EVENT = "workflow-storage-updated";
+const SERVER_WORKFLOW_SNAPSHOT: WorkflowSnapshotState = {
+  workflowSession: EMPTY_WORKFLOW_SESSION,
+  jiraSettings: INITIAL_JIRA_SETTINGS,
+  outlookSettings: INITIAL_OUTLOOK_SETTINGS,
+  hasLoaded: false,
+};
 
 let cachedClientSignature = "";
 let cachedClientSnapshot: WorkflowSnapshotState | null = null;
@@ -127,12 +133,7 @@ async function publishSharedWorkflowSnapshot() {
 }
 
 function readServerSnapshot(): WorkflowSnapshotState {
-  return {
-    workflowSession: EMPTY_WORKFLOW_SESSION,
-    jiraSettings: INITIAL_JIRA_SETTINGS,
-    outlookSettings: INITIAL_OUTLOOK_SETTINGS,
-    hasLoaded: false,
-  };
+  return SERVER_WORKFLOW_SNAPSHOT;
 }
 
 function readClientSnapshot(): WorkflowSnapshotState {
