@@ -1,14 +1,17 @@
 .page {
-  width: min(1320px, calc(100vw - 32px));
+  width: 100%;
+  max-width: 1120px;
   margin: 0 auto;
   display: grid;
-  gap: 30px;
+  gap: 20px;
 }
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  grid-template-columns: minmax(0, 1fr) 300px;
   gap: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .heroPanel,
@@ -27,33 +30,23 @@
 .highlightCard,
 .riskCard,
 .summaryCard {
-  border: 1px solid var(--border-subtle);
-  background: var(--surface);
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(16px);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .heroPanel {
   position: relative;
   overflow: hidden;
-  padding: 40px;
-  border-radius: 36px;
-  background:
-    radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(244, 114, 182, 0.14), transparent 34%),
-    linear-gradient(135deg, #0b1220, #172033 42%, #213b68 100%);
-  color: #f8fafc;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
 }
 
 .heroPanel::after {
-  content: "";
-  position: absolute;
-  inset: auto -20% -35% auto;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  filter: blur(6px);
+  content: none;
 }
 
 .eyebrow {
@@ -67,17 +60,17 @@
 }
 
 .heroPanel h1 {
-  max-width: 13ch;
+  max-width: 17ch;
   margin: 14px 0 16px;
-  font-size: clamp(2.7rem, 3.6vw, 4.5rem);
-  line-height: 0.94;
-  letter-spacing: -0.07em;
+  font-size: clamp(2rem, 2.8vw, 3rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
 }
 
 .heroPanel p {
   max-width: 60ch;
   margin: 0;
-  color: rgba(226, 232, 240, 0.86);
+  color: var(--ink-soft);
   line-height: 1.7;
 }
 
@@ -95,9 +88,9 @@
   gap: 8px;
   border-radius: 999px;
   padding: 9px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: rgba(241, 245, 249, 0.9);
-  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--ink-soft);
+  background: transparent;
   font-size: 0.88rem;
   font-weight: 700;
 }
@@ -109,23 +102,23 @@
 
 .metricRail {
   display: grid;
-  gap: 16px;
-  padding: 20px;
-  border-radius: 36px;
+  gap: 0;
+  align-content: start;
+  padding: 0 0 0 24px;
+  border-left: 1px solid var(--border-subtle);
+  border-radius: 0;
 }
 
 .metricCard {
-  border-radius: 24px;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.84);
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease;
+  border-radius: 0;
+  padding: 0 0 18px;
+  background: transparent;
+  transition: none;
 }
 
-.metricCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 42px rgba(15, 23, 42, 0.08);
+.metricCard + .metricCard {
+  padding-top: 18px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .metricCard span,
@@ -153,16 +146,18 @@
 }
 
 .panel {
-  border-radius: 32px;
-  padding: 30px;
+  border-radius: 0;
+  padding: 0;
 }
 
 .panelHeader {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .panelHeader h2,
@@ -211,11 +206,8 @@
 .minutesPanel,
 .metaCard {
   border-radius: 28px;
-  padding: 24px;
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    background 180ms ease;
+  padding: 18px 0;
+  transition: background 160ms ease;
 }
 
 .widgetCard:hover,
@@ -230,8 +222,9 @@
 .transcriptPanel:hover,
 .minutesPanel:hover,
 .metaCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 42px rgba(15, 23, 42, 0.08);
+  transform: none;
+  box-shadow: none;
+  background: rgba(248, 250, 252, 0.65);
 }
 
 .kpiCard strong,
@@ -342,7 +335,30 @@
 .moduleGrid,
 .highlightGrid,
 .summaryGrid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.moduleCard,
+.highlightCard,
+.summaryCard,
+.itemCard,
+.integrationCard,
+.promptCard,
+.riskCard {
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 0;
+}
+
+.moduleCard:first-child,
+.highlightCard:first-child,
+.summaryCard:first-child,
+.itemCard:first-child,
+.integrationCard:first-child,
+.promptCard:first-child,
+.riskCard:first-child {
+  border-top: 0;
+  padding-top: 0;
 }
 
 .moduleCard h3,
@@ -418,10 +434,11 @@
 .transcriptSnippet,
 .metadataListItem,
 .callout {
-  border-radius: 18px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 0;
+  padding: 14px 0;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .minutesGrid {
@@ -441,16 +458,19 @@
 .tabLink,
 .pageLink {
   min-width: 42px;
-  padding: 10px 14px;
-  border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.78);
+  padding: 8px 2px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink-soft);
 }
 
 .tabLinkActive,
 .pageLinkActive {
-  border-color: rgba(15, 23, 42, 0.14);
-  background: linear-gradient(180deg, #111827, #0f172a);
-  color: #f8fafc;
+  border-color: #0c66e4;
+  background: transparent;
+  color: #0c66e4;
 }
 
 .itemGrid,
@@ -463,7 +483,8 @@
 .itemGrid,
 .integrationGrid,
 .riskGrid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
+  gap: 0;
 }
 
 .itemTopRow,
@@ -489,10 +510,13 @@
 }
 
 .detailCard {
-  border-radius: 18px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-left: 3px solid rgba(12, 102, 228, 0.22);
+  border-radius: 0;
+  padding: 2px 0 2px 12px;
+  background: transparent;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
 }
 
 .footerBar {
@@ -513,14 +537,14 @@
 
 .tableWrap {
   overflow-x: auto;
-  border-radius: 22px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 0;
+  border: 0;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  background: rgba(255, 255, 255, 0.76);
+  background: transparent;
 }
 
 .table th,
@@ -539,8 +563,8 @@
 }
 
 .banner {
-  border-radius: 24px;
-  padding: 22px;
+  border-radius: 0;
+  padding: 22px 0;
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.92));
   color: #f8fafc;
 }
@@ -557,22 +581,174 @@
 }
 
 .promptGrid {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: 1fr;
+  gap: 0;
 }
 
 .promptCard {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(247, 250, 252, 0.76));
+  background: transparent;
 }
 
 .summaryGrid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: 1fr;
+  gap: 0;
 }
 
 .emptyState {
-  border-radius: 22px;
-  padding: 28px;
-  background: rgba(255, 255, 255, 0.68);
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 0;
+  padding: 28px 0;
+  background: transparent;
+  border: 0;
+}
+
+.presentationSurface {
+  display: grid;
+  gap: 22px;
+}
+
+.presentationIntro {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.presentationIntro h3 {
+  margin: 8px 0 0;
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+.presentationIntro p {
+  max-width: 62ch;
+  margin: 10px 0 0;
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+
+.slidePreviewGrid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.slidePreview {
+  position: relative;
+  min-height: 210px;
+  grid-column: span 3;
+  overflow: hidden;
+  padding: 18px 0 18px 18px;
+  border-left: 3px solid rgba(12, 102, 228, 0.22);
+}
+
+.slidePreviewHero {
+  grid-column: span 6;
+  min-height: 230px;
+  border-left-color: #0c66e4;
+}
+
+.slidePreview span {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.slidePreview h3 {
+  margin: 10px 0 0;
+  font-size: 1.28rem;
+  letter-spacing: -0.03em;
+}
+
+.slidePreview p {
+  max-width: 54ch;
+  margin: 10px 0 0;
+  color: var(--ink-soft);
+  line-height: 1.58;
+}
+
+.deckMetricStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.deckMetricStrip strong {
+  padding-left: 12px;
+  border-left: 3px solid rgba(12, 102, 228, 0.28);
+  font-size: 1.35rem;
+}
+
+.miniFlow {
+  position: relative;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  margin: 24px 0 0;
+}
+
+.miniFlow::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  height: 2px;
+  background: #cbd5e1;
+}
+
+.miniFlow i {
+  position: relative;
+  z-index: 1;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #dbeafe;
+}
+
+.miniFlow .activeFlowNode {
+  width: 26px;
+  height: 26px;
+  background: #0c66e4;
+}
+
+.riskBars {
+  display: grid;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.riskBars b {
+  display: block;
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ef4444, #f59e0b);
+}
+
+.presentationSteps {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0 0;
+  padding-left: 20px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.previewChart {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  height: 92px;
+  margin-top: 22px;
+}
+
+.previewChart b {
+  width: 18px;
+  border-radius: 999px 999px 0 0;
+  background: linear-gradient(180deg, #0c66e4, #14b8a6);
 }
 
 @media (max-width: 1180px) {
@@ -591,6 +767,11 @@
   .moduleGrid,
   .highlightGrid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .metricRail {
+    padding-left: 0;
+    border-left: 0;
   }
 }
 
@@ -614,10 +795,6 @@
 }
 
 @media (max-width: 820px) {
-  .page {
-    width: min(100vw - 20px, 100%);
-  }
-
   .heroPanel,
   .metricRail,
   .panel,
@@ -634,12 +811,12 @@
   .highlightCard,
   .riskCard,
   .summaryCard {
-    border-radius: 22px;
+    border-radius: 0;
   }
 
   .heroPanel,
   .panel {
-    padding: 20px;
+    padding: 0;
   }
 
   .panelHeader,
@@ -653,9 +830,11 @@
 
 .homeHero {
   display: grid;
-  grid-template-columns: minmax(0, 1.02fr) minmax(360px, 0.98fr);
+  grid-template-columns: minmax(0, 1fr) 340px;
   gap: 24px;
   align-items: stretch;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .homeHeroStory,
@@ -672,9 +851,9 @@
 .homeWorkflowCard,
 .pipelineStageCard,
 .homeBanner {
-  border: 1px solid var(--border-subtle);
-  background: var(--surface);
-  box-shadow: var(--shadow-soft);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .homeHeroStory {
@@ -682,27 +861,24 @@
   overflow: hidden;
   display: grid;
   gap: 20px;
-  padding: 36px;
-  border-radius: 32px;
-  background:
-    radial-gradient(circle at top left, rgba(15, 118, 110, 0.22), transparent 32%),
-    radial-gradient(circle at 78% 12%, rgba(245, 158, 11, 0.22), transparent 26%),
-    linear-gradient(145deg, #0f172a 0%, #172033 48%, #223554 100%);
-  color: #f8fafc;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
 }
 
 .homeHeroStory h1 {
-  max-width: 12ch;
+  max-width: 16ch;
   margin: 0;
-  font-size: clamp(3rem, 4.2vw, 5.1rem);
-  line-height: 0.93;
-  letter-spacing: -0.07em;
+  font-size: clamp(2.2rem, 3.4vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
 }
 
 .homeHeroStory p {
   max-width: 58ch;
   margin: 0;
-  color: rgba(226, 232, 240, 0.86);
+  color: var(--ink-soft);
   line-height: 1.72;
 }
 
@@ -727,14 +903,14 @@
 }
 
 .homePrimaryCta {
-  background: #f8fafc;
-  color: #0f172a;
+  background: #0c66e4;
+  color: #ffffff;
 }
 
 .homeSecondaryCta {
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.07);
-  color: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  background: #ffffff;
+  color: var(--ink);
 }
 
 .homePrimaryCta:hover,
@@ -749,10 +925,11 @@
 }
 
 .homeSignalCard {
-  padding: 18px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(14px);
+  padding: 0 0 0 12px;
+  border-left: 3px solid rgba(12, 102, 228, 0.28);
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
 }
 
 .homeSignalCard strong {
@@ -764,25 +941,24 @@
 
 .homeSignalCard p {
   margin-top: 8px;
-  color: rgba(226, 232, 240, 0.8);
+  color: var(--ink-soft);
 }
 
 .homeHeroPreview {
-  padding: 18px;
-  border-radius: 32px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.82)),
-    radial-gradient(circle at top right, rgba(29, 78, 216, 0.12), transparent 28%);
+  padding: 0 0 0 24px;
+  border-left: 1px solid var(--border-subtle);
+  border-radius: 0;
+  background: transparent;
 }
 
 .heroPreviewFrame {
   display: grid;
   gap: 18px;
   height: 100%;
-  padding: 18px;
-  border-radius: 24px;
-  background: linear-gradient(180deg, #ffffff, #f8fbfd);
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
 }
 
 .previewHeaderRow {
@@ -803,7 +979,7 @@
 .homeVisualImage {
   width: 100%;
   height: auto;
-  border-radius: 22px;
+  border-radius: 8px;
   border: 1px solid rgba(15, 23, 42, 0.06);
 }
 
@@ -816,10 +992,13 @@
 .previewMetricCard {
   display: grid;
   gap: 8px;
-  padding: 14px;
-  border-radius: 18px;
-  background: rgba(247, 250, 252, 0.9);
-  border: 1px solid rgba(15, 23, 42, 0.06);
+  padding: 0 0 0 12px;
+  border-left: 3px solid rgba(15, 23, 42, 0.1);
+  border-radius: 0;
+  background: transparent;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
 }
 
 .previewMetricCard strong {
@@ -834,9 +1013,10 @@
 }
 
 .homeStatCard {
-  padding: 20px;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.78);
+  padding: 0 0 0 12px;
+  border-left: 3px solid rgba(12, 102, 228, 0.22);
+  border-radius: 0;
+  background: transparent;
 }
 
 .homeStatCard strong {
@@ -891,12 +1071,18 @@
 .homePipelineCard,
 .homeWorkflowCard,
 .homeBanner {
-  padding: 24px;
-  border-radius: 28px;
+  padding: 20px 0;
+  border-radius: 0;
 }
 
 .homeCapabilityCard {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.76));
+  background: transparent;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.homeCapabilityCard:first-child {
+  border-top: 0;
+  padding-top: 0;
 }
 
 .homeCapabilityCard h3,
@@ -929,14 +1115,14 @@
 }
 
 .homeVisualCard {
-  background:
-    radial-gradient(circle at top right, rgba(29, 78, 216, 0.08), transparent 28%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(247, 250, 252, 0.84));
+  background: transparent;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .homeMiniBoard {
-  background: linear-gradient(180deg, #0f172a, #172033);
-  color: #f8fafc;
+  background: transparent;
+  color: var(--ink);
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .integrationCloud {
@@ -951,21 +1137,19 @@
   align-items: center;
   border-radius: 999px;
   padding: 9px 12px;
-  background: rgba(255, 255, 255, 0.1);
+  background: #f4f5f7;
   color: inherit;
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  border: 1px solid var(--border-subtle);
   font-size: 0.84rem;
   font-weight: 700;
 }
 
 .homeBoardSection {
-  padding: 26px;
-  border-radius: 30px;
-  border: 1px solid var(--border-subtle);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.78)),
-    radial-gradient(circle at top left, rgba(15, 118, 110, 0.08), transparent 28%);
-  box-shadow: var(--shadow-soft);
+  padding: 0;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .homeBoardGrid {
@@ -975,7 +1159,7 @@
 .homeChartCard,
 .homeTableCard,
 .homeInsightCard {
-  background: rgba(255, 255, 255, 0.8);
+  background: transparent;
 }
 
 .trendChart {
@@ -1017,10 +1201,11 @@
 .programRow,
 .governanceRow,
 .riskMatrixItem {
-  padding: 16px 18px;
-  border-radius: 20px;
-  background: rgba(247, 250, 252, 0.84);
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 14px 0;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .programRowTop {
@@ -1129,14 +1314,14 @@
 }
 
 .homeInsightCard {
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.92));
-  color: #f8fafc;
+  background: transparent;
+  color: var(--ink);
 }
 
 .homeInsightCard p,
 .homeInsightCard li,
 .homeMiniBoard p {
-  color: rgba(226, 232, 240, 0.84);
+  color: var(--ink-soft);
 }
 
 .homeOperationsSection {
@@ -1152,9 +1337,10 @@
 .pipelineStageCard {
   display: grid;
   gap: 10px;
-  padding: 18px;
-  border-radius: 20px;
-  background: rgba(247, 250, 252, 0.86);
+  padding: 0 0 0 12px;
+  border-left: 3px solid rgba(12, 102, 228, 0.22);
+  border-radius: 0;
+  background: transparent;
 }
 
 .pipelineStageCard strong {
@@ -1205,15 +1391,15 @@
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  background:
-    radial-gradient(circle at top left, rgba(245, 158, 11, 0.18), transparent 22%),
-    linear-gradient(135deg, #0f172a, #172033 42%, #223554 100%);
-  color: #f8fafc;
+  padding-top: 22px;
+  border-top: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--ink);
 }
 
 .homeBanner p {
   max-width: 56ch;
-  color: rgba(226, 232, 240, 0.84);
+  color: var(--ink-soft);
 }
 
 @media (max-width: 1180px) {
@@ -1223,6 +1409,11 @@
   .homeOperationsSection,
   .homeShowcaseGrid {
     grid-template-columns: 1fr;
+  }
+
+  .homeHeroPreview {
+    padding-left: 0;
+    border-left: 0;
   }
 
   .homeStatStrip,

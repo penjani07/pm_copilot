@@ -16,7 +16,7 @@ export function DonutGauge({ label, value, tone = "emerald" }: DonutGaugeProps) 
   const bounded = Math.max(0, Math.min(100, value));
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="flex items-center gap-3 border-l-2 border-slate-200 py-2 pl-4">
       <div
         className="grid h-16 w-16 place-items-center rounded-full"
         style={{
@@ -47,7 +47,7 @@ export function SparkBars({
   const max = Math.max(...values, 1);
 
   return (
-    <div className="flex h-16 items-end gap-1.5 rounded-xl bg-slate-50 px-3 py-2">
+    <div className="flex h-16 items-end gap-1.5 bg-slate-50 px-3 py-2">
       {values.map((value, index) => (
         <div
           key={`${value}-${index}`}
@@ -109,7 +109,7 @@ export function HeatStrip({
       {cells.map((cell) => (
         <div
           key={cell.label}
-          className={`rounded-lg px-3 py-2 text-center text-xs font-semibold ${colorByLevel[cell.level]}`}
+          className={`px-3 py-2 text-center text-xs font-semibold ${colorByLevel[cell.level]}`}
         >
           {cell.label}
         </div>

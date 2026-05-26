@@ -2,6 +2,7 @@
 
 import {
   Activity,
+  AlertTriangle,
   ChevronRight,
   ClipboardCheck,
   Command,
@@ -10,6 +11,7 @@ import {
   LayoutDashboard,
   LogIn,
   Orbit,
+  Presentation,
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
@@ -18,22 +20,110 @@ import type { ReactNode } from "react";
 
 import { AnalysisExportActions } from "@/components/analysis-export-actions";
 
-const NAV_ITEMS = [
-  { href: "/", label: "Workspace", icon: Orbit },
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/minutes", label: "Minutes", icon: FileText },
-  { href: "/actions", label: "Actions", icon: ClipboardCheck },
-  { href: "/delivery", label: "Delivery", icon: Activity },
-  { href: "/risks", label: "Risks", icon: Activity },
-  { href: "/executive", label: "Executive", icon: Gauge },
+const PRIMARY_NAV_ITEMS = [
+  {
+    href: "/dashboard",
+    label: "Overview",
+    description: "Portfolio pulse",
+    icon: LayoutDashboard,
+  },
+] as const;
+
+const WORKFLOW_NAV_ITEMS = [
+  { href: "/", label: "Intake", description: "Capture source", icon: Orbit },
+  { href: "/minutes", label: "Minutes", description: "Refine record", icon: FileText },
+  {
+    href: "/actions",
+    label: "Actions",
+    description: "Approve work",
+    icon: ClipboardCheck,
+  },
+  { href: "/delivery", label: "Delivery", description: "Sync systems", icon: Activity },
+  { href: "/risks", label: "Risks", description: "RAG monitor", icon: AlertTriangle },
+  {
+    href: "/executive",
+    label: "Executive",
+    description: "Brief sponsors",
+    icon: Gauge,
+  },
+] as const;
+
+const SUPPORT_NAV_ITEMS = [
+  {
+    href: "/briefings",
+    label: "Briefings",
+    description: "Portfolio updates",
+    icon: Presentation,
+  },
+  {
+    href: "/playbooks",
+    label: "Playbooks",
+    description: "Reusable rituals",
+    icon: FileText,
+  },
 ] as const;
 
 type SiteShellProps = {
   children: ReactNode;
 };
 
+const ALL_NAV_ITEMS = [
+  ...PRIMARY_NAV_ITEMS,
+  ...WORKFLOW_NAV_ITEMS,
+  ...SUPPORT_NAV_ITEMS,
+];
+
 export function SiteShell({ children }: SiteShellProps) {
   const pathname = usePathname();
+  const activeItem =
+    ALL_NAV_ITEMS.find(
+      (item) =>
+        pathname === item.href ||
+        (item.href !== "/" && pathname.startsWith(item.href)),
+    ) ?? WORKFLOW_NAV_ITEMS[0];
+
+  function renderNavItem(
+    item: (typeof ALL_NAV_ITEMS)[number],
+    index?: number,
+  ) {
+    const isActive =
+      pathname === item.href ||
+      (item.href !== "/" && pathname.startsWith(item.href));
+    const Icon = item.icon;
+
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        className={`group grid grid-cols-[auto_1fr_auto] items-center gap-2 border-l-2 px-2.5 py-2 text-sm transition-colors ${
+          isActive
+            ? "border-blue-600 bg-blue-50 text-blue-700"
+            : "border-transparent text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-950"
+        }`}
+      >
+        <Icon
+          className={`h-4 w-4 ${
+            isActive ? "text-blue-600" : "text-slate-400 group-hover:text-slate-600"
+          }`}
+        />
+        <span className="min-w-0">
+          <span className="block truncate font-semibold">{item.label}</span>
+          <span className="block truncate text-[11px] font-medium text-slate-400">
+            {item.description}
+          </span>
+        </span>
+        {typeof index === "number" ? (
+          <span
+            className={`text-[10px] font-bold tabular-nums ${
+              isActive ? "text-blue-600" : "text-slate-300"
+            }`}
+          >
+            {String(index + 1).padStart(2, "0")}
+          </span>
+        ) : null}
+      </Link>
+    );
+  }
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#f7f8fb] font-sans text-slate-950 antialiased">
@@ -53,40 +143,36 @@ export function SiteShell({ children }: SiteShellProps) {
           </span>
         </div>
 
-        <div className="flex flex-1 flex-col overflow-y-auto px-3 py-3">
-          <nav className="space-y-0.5" aria-label="Primary">
-            {NAV_ITEMS.map((item) => {
-              const isActive =
-                pathname === item.href ||
-                (item.href !== "/" && pathname.startsWith(item.href));
-              const Icon = item.icon;
+        <div className="flex flex-1 flex-col overflow-y-auto px-3 py-4">
+          <nav className="space-y-5" aria-label="Primary">
+            <section>
+              <div className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                Portfolio
+              </div>
+              <div className="space-y-1">
+                {PRIMARY_NAV_ITEMS.map((item) => renderNavItem(item))}
+              </div>
+            </section>
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`group flex items-center justify-between rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-slate-950 text-white"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
-                  }`}
-                >
-                  <div className="flex min-w-0 items-center gap-2.5">
-                    <Icon
-                      className={`h-4 w-4 flex-shrink-0 ${
-                        isActive
-                          ? "text-white"
-                          : "text-slate-400 group-hover:text-slate-600"
-                      }`}
-                    />
-                    <span className="truncate">{item.label}</span>
-                  </div>
-                  {isActive && (
-                    <div className="h-1.5 w-1.5 rounded-full bg-teal-300" />
-                  )}
-                </Link>
-              );
-            })}
+            <section>
+              <div className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                Delivery flow
+              </div>
+              <div className="space-y-1">
+                {WORKFLOW_NAV_ITEMS.map((item, index) =>
+                  renderNavItem(item, index),
+                )}
+              </div>
+            </section>
+
+            <section>
+              <div className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                Knowledge
+              </div>
+              <div className="space-y-1">
+                {SUPPORT_NAV_ITEMS.map((item) => renderNavItem(item))}
+              </div>
+            </section>
           </nav>
 
           <div className="mt-auto border-t border-slate-100 px-2 pt-4">
@@ -104,10 +190,16 @@ export function SiteShell({ children }: SiteShellProps) {
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <header className="flex h-14 flex-shrink-0 items-center justify-between border-b border-slate-200/80 bg-white px-4 lg:px-6">
           <div className="flex min-w-0 items-center gap-2 text-sm text-slate-500">
-            <span className="font-medium text-slate-700">Workspace</span>
+            <span className="font-medium text-slate-700">
+              {WORKFLOW_NAV_ITEMS.some((item) => item.href === activeItem.href)
+                ? "Delivery flow"
+                : activeItem.href === "/dashboard"
+                  ? "Portfolio"
+                  : "Knowledge"}
+            </span>
             <ChevronRight className="h-3.5 w-3.5 text-slate-400" />
             <span className="truncate font-semibold capitalize text-slate-900">
-              {pathname === "/" ? "Meeting flow" : pathname.replace("/", "")}
+              {activeItem.label}
             </span>
           </div>
 

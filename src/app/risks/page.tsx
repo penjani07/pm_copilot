@@ -26,6 +26,18 @@ function parsePage(value: string | string[] | undefined) {
   return Number.isFinite(page) && page > 0 ? page : 1;
 }
 
+function riskBadgeClass(risk: string) {
+  if (risk.toLowerCase() === "high") {
+    return "rounded bg-red-50 px-2 py-1 text-xs font-semibold text-red-700 ring-1 ring-inset ring-red-600/10";
+  }
+
+  if (risk.toLowerCase() === "low") {
+    return "rounded bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/10";
+  }
+
+  return "rounded bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-600/10";
+}
+
 export default async function RisksPage({
   searchParams,
 }: {
@@ -89,7 +101,7 @@ export default async function RisksPage({
             </div>
           </div>
 
-          <div className="mb-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="mb-5 border-b border-slate-100 pb-4">
             <HeatStrip
               cells={[
                 { label: "Delivery", level: activeTab === "delivery" ? "high" : "medium" },
@@ -113,7 +125,11 @@ export default async function RisksPage({
                 {pageItems.map((signal) => (
                   <tr key={`${signal.team}-${signal.reason}`}>
                     <td>{signal.team}</td>
-                    <td>{signal.risk}</td>
+                    <td>
+                      <span className={riskBadgeClass(signal.risk)}>
+                        {signal.risk}
+                      </span>
+                    </td>
                     <td>{signal.reason}</td>
                     <td>{signal.nextAction}</td>
                   </tr>

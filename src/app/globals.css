@@ -10,7 +10,16 @@
   --surface-alt: rgba(255, 255, 255, 0.56);
   --ink: var(--foreground);
   --ink-soft: #5b6678;
-  --accent-strong: #111827;
+  --accent-strong: #0c66e4;
+  --rag-critical-bg: #fee2e2;
+  --rag-critical-text: #b91c1c;
+  --rag-critical-line: #ef4444;
+  --rag-medium-bg: #fef3c7;
+  --rag-medium-text: #a16207;
+  --rag-medium-line: #f59e0b;
+  --rag-low-bg: #dcfce7;
+  --rag-low-text: #15803d;
+  --rag-low-line: #22c55e;
   --shadow-soft: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
@@ -57,7 +66,8 @@ textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 1rem;
+  gap: 0.45rem;
+  border-radius: 0.5rem;
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
   font-weight: 600;
@@ -70,10 +80,10 @@ textarea {
 }
 
 .app-primary-action {
-  border: 1px solid rgba(21, 110, 103, 0.26);
-  background: #156e67;
+  border: 1px solid rgba(12, 102, 228, 0.26);
+  background: #0c66e4;
   color: #ffffff;
-  box-shadow: 0 14px 28px rgba(21, 110, 103, 0.18);
+  box-shadow: none;
 }
 
 .app-primary-action:hover,
@@ -82,15 +92,15 @@ textarea {
 }
 
 .app-primary-action:active {
-  background: #105f59;
+  background: #0055cc;
   color: #ffffff;
 }
 
 .app-secondary-action {
   border: 1px solid rgba(203, 213, 225, 0.7);
-  background: rgba(255, 255, 255, 0.84);
+  background: #ffffff;
   color: #334155;
-  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.05);
+  box-shadow: none;
 }
 
 .app-secondary-action:active {

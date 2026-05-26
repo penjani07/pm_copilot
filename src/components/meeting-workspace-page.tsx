@@ -41,6 +41,7 @@ import {
   type WorkflowStorageSnapshot,
 } from "@/lib/workflow-storage";
 import { notifyWorkflowSnapshotChanged } from "@/lib/use-workflow-snapshot";
+import { CopyTextButton } from "@/components/copy-text-button";
 import { SparkBars } from "@/components/visual-metrics";
 
 import styles from "@/app/page.module.css";
@@ -190,6 +191,120 @@ function parseAdditionalAttendeeEntries(raw: string) {
 
       return value.includes("@") ? [value] : [];
     });
+}
+
+function formatListItems(items: string[]) {
+  return items.length ? items.map((item) => `- ${item}`).join("\n") : "- None";
+}
+
+function createMeetingOverviewCopy(analysis: MeetingAnalysis) {
+  return [
+    analysis.meetingTitle,
+    `Date: ${formatMeetingDate(analysis.meetingDate)}`,
+    "",
+    "Summary",
+    analysis.conciseSummary,
+    "",
+    "Overall risk",
+    analysis.overallRisk,
+    "",
+    "Recommended next step",
+    analysis.recommendedNextStep,
+  ].join("\n");
+}
+
+function createFollowUpCopy(analysis: MeetingAnalysis) {
+  const followUp = analysis.followUpMeeting;
+
+  return [
+    "Cadence follow-up",
+    followUp.title,
+    "",
+    "Summary",
+    followUp.summary,
+    "",
+    "Rationale",
+    followUp.rationale,
+    "",
+    `Schedule: ${followUp.shouldSchedule ? "Recommended" : "Not recommended"}`,
+    `Duration: ${followUp.suggestedDurationMinutes} minutes`,
+    "",
+    "Agenda",
+    formatListItems(followUp.agenda),
+  ].join("\n");
+}
+
+function createAgendaCopy(section: AgendaSection, actionItems: ActionItem[]) {
+  return [
+    `${section.referenceId} ${section.title}`,
+    "",
+    "Brief summary",
+    section.summary,
+    "",
+    "Owned follow-ups",
+    actionItems.length
+      ? actionItems
+          .map(
+            (item) =>
+              `- ${item.referenceId}: ${item.title} (${item.ownerName}, ${item.suggestedTimeline})`,
+          )
+          .join("\n")
+      : "- None",
+  ].join("\n");
+}
+
+function createActionCopy(item: ActionItem) {
+  return [
+    `${item.referenceId} ${item.title}`,
+    `Priority: ${item.priority}`,
+    `Owner: ${item.ownerName}${item.ownerEmail ? ` (${item.ownerEmail})` : ""}`,
+    `Timeline: ${item.suggestedTimeline}`,
+    `Due date: ${item.suggestedDueDate ?? "No hard due date inferred"}`,
+    "",
+    "Details",
+    item.summary,
+    "",
+    "Rationale",
+    item.rationale,
+    "",
+    "Blockers",
+    formatListItems(item.blockers),
+  ].join("\n");
+}
+
+function createEpicCopy(epic: EpicDraft) {
+  return [
+    `${epic.referenceId} ${epic.title}`,
+    `Priority: ${epic.priority}`,
+    `Owner: ${epic.ownerName}${epic.ownerEmail ? ` (${epic.ownerEmail})` : ""}`,
+    `Timeline: ${epic.suggestedTimeline}`,
+    "",
+    "Objective",
+    epic.objective,
+    "",
+    "Business value",
+    epic.businessValue,
+    "",
+    "Acceptance criteria",
+    formatListItems(epic.acceptanceCriteria),
+    "",
+    "Stories",
+    epic.stories
+      .map((story) => `- ${story.referenceId}: ${story.title} (${story.ownerName})`)
+      .join("\n"),
+  ].join("\n");
+}
+
+function getPriorityClass(priority: ActionItem["priority"]) {
+  if (priority === "High") {
+    return styles.priorityHigh;
+  }
+
+  if (priority === "Low") {
+    return styles.priorityLow;
+  }
+
+  return styles.priorityMedium;
 }
 
 function getWorkflowSessionTime(value: string | null) {
@@ -945,12 +1060,12 @@ export function MeetingWorkspacePage() {
         </div>
 
         <div className={styles.heroStats}>
-          <div className="rounded-[16px] border border-slate-900 bg-slate-950 p-4 text-white">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">
+          <div className="border-l-2 border-slate-300 py-2 pl-3">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
               Workflow Pulse
             </span>
             <div className="mt-3">
-              <SparkBars values={[2, 5, wordCount ? 8 : 1, analysis ? 10 : 3]} tone="bg-teal-300" />
+              <SparkBars values={[2, 5, wordCount ? 8 : 1, analysis ? 10 : 3]} tone="bg-teal-500" />
             </div>
           </div>
           {workflowTabs.map((tab) => (
@@ -974,6 +1089,48 @@ export function MeetingWorkspacePage() {
           ))}
         </div>
       </header>
+
+      <section className={styles.integrationStatusStrip} aria-label="Integration readiness">
+        <div className={styles.integrationStatusCopy}>
+          <span
+            className={
+              isJiraReady
+                ? styles.ragLowLabel
+                : styles.ragMediumLabel
+            }
+          >
+            Jira {isJiraReady ? "ready" : "setup required"}
+          </span>
+          <p>
+            {isJiraReady
+              ? "Jira push actions are enabled for tickets, epics, and stories."
+              : "Jira push buttons stay disabled until site URL, email, API token, project key, and issue types are configured."}
+          </p>
+        </div>
+        <div className={styles.integrationStatusCopy}>
+          <span
+            className={
+              isOutlookReady
+                ? styles.ragLowLabel
+                : styles.ragMediumLabel
+            }
+          >
+            Outlook {isOutlookReady ? "ready" : "setup required"}
+          </span>
+          <p>
+            {isOutlookReady
+              ? "Follow-up invite creation is available."
+              : "Outlook scheduling needs a Microsoft Graph token before invites can be sent."}
+          </p>
+        </div>
+        <button
+          className={styles.secondaryButton}
+          type="button"
+          onClick={() => setIsSettingsPanelOpen(true)}
+        >
+          Configure integrations
+        </button>
+      </section>
 
       <div className={styles.appWorkspace}>
       <aside className={styles.workflowRail}>
@@ -1699,6 +1856,10 @@ export function MeetingWorkspacePage() {
                   <h2>{analysis.meetingTitle}</h2>
                   <p>{formatMeetingDate(analysis.meetingDate)}</p>
                 </div>
+                <CopyTextButton
+                  className={styles.copyButton}
+                  text={createMeetingOverviewCopy(analysis)}
+                />
               </div>
 
               <div className={styles.summaryStack}>
@@ -1728,17 +1889,28 @@ export function MeetingWorkspacePage() {
                   </p>
                 </div>
                 {analysis.followUpMeeting.shouldSchedule ? (
-                  <button
-                    className={styles.primaryButton}
-                    type="button"
-                    disabled={!isOutlookReady || inviteState.status === "creating"}
-                    onClick={handleScheduleInvite}
-                  >
-                    {inviteState.status === "creating"
-                      ? "Sending..."
-                      : "Send Outlook invite"}
-                  </button>
-                ) : null}
+                  <div className={styles.headerActions}>
+                    <CopyTextButton
+                      className={styles.copyButton}
+                      text={createFollowUpCopy(analysis)}
+                    />
+                    <button
+                      className={styles.primaryButton}
+                      type="button"
+                      disabled={!isOutlookReady || inviteState.status === "creating"}
+                      onClick={handleScheduleInvite}
+                    >
+                      {inviteState.status === "creating"
+                        ? "Sending..."
+                        : "Send Outlook invite"}
+                    </button>
+                  </div>
+                ) : (
+                  <CopyTextButton
+                    className={styles.copyButton}
+                    text={createFollowUpCopy(analysis)}
+                  />
+                )}
               </div>
 
               <div className={styles.summaryStack}>
@@ -1896,6 +2068,16 @@ export function MeetingWorkspacePage() {
                     work and expected completion timing.
                   </p>
                 </div>
+                {analysis.agendaSections.length ? (
+                  <CopyTextButton
+                    className={styles.copyButton}
+                    text={analysis.agendaSections
+                      .map((section) =>
+                        createAgendaCopy(section, getAgendaActionItems(section)),
+                      )
+                      .join("\n\n")}
+                  />
+                ) : null}
               </div>
 
               {analysis.agendaSections.length === 0 ? (
@@ -1912,14 +2094,22 @@ export function MeetingWorkspacePage() {
                         key={section.referenceId}
                         className={styles.agendaCard}
                       >
-                        <div className={styles.actionMeta}>
-                          <span className={styles.referencePill}>
-                            {section.referenceId}
-                          </span>
+                        <div className={styles.recordHeader}>
+                          <div>
+                            <div className={styles.actionMeta}>
+                              <span className={styles.referencePill}>
+                                {section.referenceId}
+                              </span>
+                            </div>
+                            <h3>{section.title}</h3>
+                          </div>
+                          <CopyTextButton
+                            className={styles.copyButton}
+                            text={createAgendaCopy(section, agendaActionItems)}
+                          />
                         </div>
-                        <h3>{section.title}</h3>
 
-                        <div className={styles.summaryBlock}>
+                        <div className={styles.recordSection}>
                           <span className={styles.summaryLabel}>Brief summary</span>
                           <p>{section.summary}</p>
                         </div>
@@ -1938,7 +2128,9 @@ export function MeetingWorkspacePage() {
                                     </span>
                                     <h4>{item.title}</h4>
                                   </div>
-                                  <span className={styles.priorityPill}>
+                                  <span
+                                    className={`${styles.priorityPill} ${getPriorityClass(item.priority)}`}
+                                  >
                                     {item.priority}
                                   </span>
                                 </div>
@@ -2005,7 +2197,11 @@ export function MeetingWorkspacePage() {
                               <span className={styles.referencePill}>
                                 {epic.referenceId}
                               </span>
-                              <span className={styles.priorityPill}>{epic.priority}</span>
+                              <span
+                                className={`${styles.priorityPill} ${getPriorityClass(epic.priority)}`}
+                              >
+                                {epic.priority}
+                              </span>
                               <span className={styles.confidencePill}>
                                 {epic.confidence} confidence
                               </span>
@@ -2025,6 +2221,10 @@ export function MeetingWorkspacePage() {
                               ? "Creating..."
                               : "Create epic and stories"}
                           </button>
+                          <CopyTextButton
+                            className={styles.copyButton}
+                            text={createEpicCopy(epic)}
+                          />
                         </div>
 
                         <div className={styles.detailGrid}>
@@ -2046,11 +2246,11 @@ export function MeetingWorkspacePage() {
                         </div>
 
                         <div className={styles.summaryStack}>
-                          <div className={styles.summaryBlock}>
+                          <div className={styles.recordSection}>
                             <span className={styles.summaryLabel}>Objective</span>
                             <p>{epic.objective}</p>
                           </div>
-                          <div className={styles.summaryBlock}>
+                          <div className={styles.recordSection}>
                             <span className={styles.summaryLabel}>Business value</span>
                             <p>{epic.businessValue}</p>
                           </div>
@@ -2090,7 +2290,9 @@ export function MeetingWorkspacePage() {
                                   </span>
                                   <h4>{story.title}</h4>
                                 </div>
-                                <span className={styles.priorityPill}>
+                                <span
+                                  className={`${styles.priorityPill} ${getPriorityClass(story.priority)}`}
+                                >
                                   {story.priority}
                                 </span>
                               </div>
@@ -2169,7 +2371,11 @@ export function MeetingWorkspacePage() {
                               <span className={styles.referencePill}>
                                 {item.referenceId}
                               </span>
-                              <span className={styles.priorityPill}>{item.priority}</span>
+                              <span
+                                className={`${styles.priorityPill} ${getPriorityClass(item.priority)}`}
+                              >
+                                {item.priority}
+                              </span>
                               <span className={styles.confidencePill}>
                                 {item.confidence} confidence
                               </span>
@@ -2187,6 +2393,10 @@ export function MeetingWorkspacePage() {
                               ? "Creating..."
                               : "Create Jira ticket"}
                           </button>
+                          <CopyTextButton
+                            className={styles.copyButton}
+                            text={createActionCopy(item)}
+                          />
                         </div>
 
                         <div className={styles.detailGrid}>
@@ -2208,16 +2418,16 @@ export function MeetingWorkspacePage() {
                         </div>
 
                         <div className={styles.summaryStack}>
-                          <div className={styles.summaryBlock}>
+                          <div className={styles.recordSection}>
                             <span className={styles.summaryLabel}>Action details</span>
                             <p>{item.summary}</p>
                           </div>
-                          <div className={styles.summaryBlock}>
+                          <div className={styles.recordSection}>
                             <span className={styles.summaryLabel}>Why this was created</span>
                             <p>{item.rationale}</p>
                           </div>
                           {item.blockers.length ? (
-                            <div className={styles.summaryBlock}>
+                            <div className={styles.recordSection}>
                               <span className={styles.summaryLabel}>Potential blockers</span>
                               <p>{item.blockers.join(", ")}</p>
                             </div>

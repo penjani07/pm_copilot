@@ -28,6 +28,18 @@ function requiresReview(item: ActionItem) {
   return item.confidence !== "High" || !item.suggestedDueDate || item.blockers.length > 1;
 }
 
+function priorityBadgeClass(priority: ActionItem["priority"]) {
+  if (priority === "High") {
+    return "bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/10";
+  }
+
+  if (priority === "Low") {
+    return "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10";
+  }
+
+  return "bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/10";
+}
+
 export function ActionsWorkflowPage() {
   const { workflowSession, hasAnalysis, isJiraReady } = useWorkflowSnapshot();
   const analysis = workflowSession.analysis;
@@ -36,10 +48,10 @@ export function ActionsWorkflowPage() {
   const readyItems = actionItems.filter((item) => !requiresReview(item));
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
-      <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-6 px-4 pb-10 pt-4 lg:px-6">
+    <div>
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 pb-10">
         <motion.header
-          className="sticky top-4 z-30 rounded-3xl border border-white/20 bg-white/70 p-4 shadow-lg shadow-black/5 backdrop-blur-md"
+          className="border-b border-slate-200 pb-5"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -65,12 +77,12 @@ export function ActionsWorkflowPage() {
               {TRACKER_STEPS.map((step, index) => (
                 <div
                   key={step}
-                  className={`rounded-2xl border border-white/20 p-4 text-sm shadow-lg shadow-black/5 backdrop-blur-md ${
+                  className={`border-l-2 py-2 pl-3 text-sm ${
                     index === 2
-                      ? "bg-[#156e67] text-white"
+                      ? "border-blue-600 bg-blue-50 text-slate-950"
                       : index < 2
-                        ? "bg-emerald-50 text-emerald-700"
-                        : "bg-white/70 text-slate-500"
+                        ? "border-emerald-500 text-emerald-700"
+                        : "border-slate-200 text-slate-500"
                   }`}
                 >
                   <div className="mb-2 text-xs font-medium">0{index + 1}</div>
@@ -83,7 +95,7 @@ export function ActionsWorkflowPage() {
 
         <div className="grid gap-6 xl:grid-cols-[240px_minmax(0,1fr)_320px]">
           <aside className="space-y-4 xl:sticky xl:top-28 xl:h-fit">
-            <section className="rounded-3xl border border-white/20 bg-white/70 p-6 shadow-lg shadow-black/5 backdrop-blur-md">
+            <section className="border-b border-slate-200 pb-5">
               <p className="text-sm text-slate-500">Approval readiness</p>
               <h2 className="mt-2 text-2xl font-semibold text-slate-950">
                 {actionItems.length ? `${actionItems.length} extracted tasks` : "Awaiting action items"}
@@ -104,7 +116,7 @@ export function ActionsWorkflowPage() {
               </div>
             </section>
 
-            <section className="rounded-3xl border border-white/20 bg-white/70 p-4 shadow-lg shadow-black/5 backdrop-blur-md">
+            <section className="border-b border-slate-200 pb-5">
               <div className="mb-3 px-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
                 Queue signals
               </div>
@@ -120,7 +132,7 @@ export function ActionsWorkflowPage() {
                   ["Ready to sync", `${readyItems.length}`],
                   ["Jira connection", isJiraReady ? "Ready" : "Not connected"],
                 ].map(([label, value]) => (
-                  <div key={label} className="rounded-2xl bg-white/80 px-4 py-3">
+                  <div key={label} className="border-t border-slate-100 py-3 first:border-t-0">
                     <p className="text-xs uppercase tracking-[0.16em] text-slate-400">{label}</p>
                     <p className="mt-1 text-sm font-medium text-slate-900">{value}</p>
                   </div>
@@ -131,7 +143,7 @@ export function ActionsWorkflowPage() {
 
           <main className="space-y-6">
             {!hasAnalysis ? (
-              <div className="rounded-3xl border border-white/20 bg-white/70 p-8 shadow-lg shadow-black/5 backdrop-blur-md">
+              <div className="py-8">
                 <h2 className="text-2xl font-semibold text-slate-950">No approved action queue yet</h2>
                 <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-500">
                   Run AI analysis to split real tasks into review and sync lanes.
@@ -145,7 +157,7 @@ export function ActionsWorkflowPage() {
               </div>
             ) : (
               <>
-                <section className="rounded-3xl border border-white/20 bg-white/70 p-6 shadow-lg shadow-black/5 backdrop-blur-md">
+                <section className="border-b border-slate-200 pb-6">
                   <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <div>
                       <p className="text-sm text-slate-500">Review queue</p>
@@ -164,7 +176,7 @@ export function ActionsWorkflowPage() {
                       reviewItems.map((item) => (
                         <article
                           key={item.referenceId}
-                          className="rounded-2xl border border-white/20 bg-white/80 p-6 shadow-lg shadow-black/5"
+                          className="border-t border-slate-100 py-5 first:border-t-0"
                         >
                           <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                             <div>
@@ -176,25 +188,27 @@ export function ActionsWorkflowPage() {
                                 {item.summary}
                               </p>
                             </div>
-                            <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
-                              {item.confidence} confidence
+                            <span
+                              className={`rounded px-2 py-1 text-xs font-semibold ${priorityBadgeClass(item.priority)}`}
+                            >
+                              {item.priority} priority
                             </span>
                           </div>
 
                           <div className="mt-4 grid gap-3 md:grid-cols-3">
-                            <div className="rounded-2xl bg-slate-50 p-4">
+                            <div className="border-l-2 border-slate-200 pl-3">
                               <p className="text-sm text-slate-500">Owner</p>
                               <p className="mt-2 text-lg font-semibold text-slate-950">
                                 {item.ownerName}
                               </p>
                             </div>
-                            <div className="rounded-2xl bg-slate-50 p-4">
+                            <div className="border-l-2 border-slate-200 pl-3">
                               <p className="text-sm text-slate-500">Due date</p>
                               <p className="mt-2 text-lg font-semibold text-slate-950">
                                 {item.suggestedDueDate ?? "Needs date"}
                               </p>
                             </div>
-                            <div className="rounded-2xl bg-slate-50 p-4">
+                            <div className="border-l-2 border-slate-200 pl-3">
                               <p className="text-sm text-slate-500">Priority</p>
                               <p className="mt-2 text-lg font-semibold text-slate-950">
                                 {item.priority}
@@ -203,21 +217,21 @@ export function ActionsWorkflowPage() {
                           </div>
 
                           {item.blockers.length ? (
-                            <div className="mt-4 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                            <div className="mt-4 border-l-2 border-rose-300 bg-rose-50 px-3 py-2 text-sm text-rose-700">
                               Blockers: {item.blockers.join(", ")}
                             </div>
                           ) : null}
                         </article>
                       ))
                     ) : (
-                      <div className="rounded-2xl border border-emerald-200/70 bg-emerald-50 p-5 text-sm text-emerald-700">
+                      <div className="border-l-2 border-emerald-400 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
                         All current action items are strong enough to move forward into sync.
                       </div>
                     )}
                   </div>
                 </section>
 
-                <section className="rounded-3xl border border-white/20 bg-white/70 p-6 shadow-lg shadow-black/5 backdrop-blur-md">
+                <section className="pb-6">
                   <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <div>
                       <p className="text-sm text-slate-500">Ready lane</p>
@@ -235,7 +249,7 @@ export function ActionsWorkflowPage() {
                     {readyItems.map((item) => (
                       <article
                         key={item.referenceId}
-                        className="rounded-2xl border border-white/20 bg-white/80 p-6 shadow-lg shadow-black/5"
+                        className="border-t border-slate-100 py-5 first:border-t-0"
                       >
                         <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                           <div>
@@ -244,7 +258,9 @@ export function ActionsWorkflowPage() {
                               {item.title}
                             </h3>
                           </div>
-                          <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+                          <span
+                            className={`rounded px-2 py-1 text-xs font-semibold ${priorityBadgeClass(item.priority)}`}
+                          >
                             {item.priority}
                           </span>
                         </div>
@@ -272,21 +288,21 @@ export function ActionsWorkflowPage() {
           </main>
 
           <aside className="space-y-4 xl:sticky xl:top-28 xl:h-fit">
-            <section className="rounded-3xl border border-white/20 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-6 text-white shadow-lg shadow-black/10">
-              <p className="text-sm text-slate-300">AI insights</p>
-              <h2 className="mt-2 text-2xl font-semibold">Approval intelligence</h2>
+            <section className="border-l border-slate-200 pl-5">
+              <p className="text-sm text-slate-500">AI insights</p>
+              <h2 className="mt-2 text-2xl font-semibold text-slate-950">Approval intelligence</h2>
               <div className="mt-4 space-y-3">
-                <div className="rounded-2xl bg-white/10 p-4">
-                  <p className="text-sm font-medium text-slate-100">Blocking signals</p>
-                  <p className="mt-2 text-sm leading-7 text-slate-300">
+                <div className="border-t border-slate-100 py-3">
+                  <p className="text-sm font-medium text-slate-950">Blocking signals</p>
+                  <p className="mt-2 text-sm leading-7 text-slate-500">
                     {reviewItems.length
                       ? `${reviewItems.length} tasks need PM clarification.`
                       : "No blocker-rich tasks remain."}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-white/10 p-4">
-                  <p className="text-sm font-medium text-slate-100">Jira readiness</p>
-                  <p className="mt-2 text-sm leading-7 text-slate-300">
+                <div className="border-t border-slate-100 py-3">
+                  <p className="text-sm font-medium text-slate-950">Jira readiness</p>
+                  <p className="mt-2 text-sm leading-7 text-slate-500">
                     {isJiraReady
                       ? "Jira connected. Ready items can sync."
                       : "Connect Jira before creation."}

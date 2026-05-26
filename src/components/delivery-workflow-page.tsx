@@ -209,7 +209,7 @@ export function DeliveryWorkflowPage() {
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-4">
         <div className="space-y-4 xl:col-span-1">
-          <div className="rounded-xl border border-slate-200 bg-white p-4">
+          <div className="border-b border-slate-200 pb-4">
             <SegmentedBar
               segments={[
                 { label: "Done", value: activeIndex, className: "bg-emerald-500" },
@@ -235,7 +235,7 @@ export function DeliveryWorkflowPage() {
                     onClick={() => setManualActiveIndex(index)}
                     className={`flex w-full items-start gap-3 rounded-lg p-2.5 text-left transition-colors ${
                       state === "active"
-                        ? "border border-slate-200/80 bg-slate-50"
+                        ? "bg-blue-50 text-blue-700"
                         : "opacity-70 hover:bg-slate-50"
                     }`}
                   >
@@ -259,7 +259,7 @@ export function DeliveryWorkflowPage() {
         </div>
 
         <div className="space-y-5 xl:col-span-2">
-          <div className="rounded-xl border border-slate-200 bg-white p-5">
+          <div className="border-b border-slate-200 pb-5">
             <div className="flex items-center justify-between gap-4 border-b border-slate-100 pb-3">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
@@ -301,7 +301,7 @@ export function DeliveryWorkflowPage() {
 
             <div className="mt-4 space-y-2">
               <h4 className="text-xs font-semibold text-slate-700">Governance Checks</h4>
-              <div className="space-y-2 rounded-lg border border-slate-100 bg-slate-50/50 p-3 text-xs text-slate-600">
+              <div className="space-y-2 border-l-2 border-slate-200 pl-3 text-xs text-slate-600">
                 <div className="flex items-center gap-2">
                   <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                   <span>
@@ -326,7 +326,7 @@ export function DeliveryWorkflowPage() {
               Live Activity Stream
             </h3>
 
-            <div className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="divide-y divide-slate-100">
               {model.activity.map((log) => (
                 <div
                   key={log.title}
@@ -351,10 +351,10 @@ export function DeliveryWorkflowPage() {
         </div>
 
         <div className="space-y-4 xl:col-span-1">
-          <div className="rounded-xl border border-slate-200 bg-slate-900 p-4 text-white shadow-sm">
-            <div className="flex items-center gap-2 border-b border-white/10 pb-3">
+          <div className="border-l border-slate-200 pl-5">
+            <div className="flex items-center gap-2 border-b border-slate-200 pb-3">
               <Sliders className="h-4 w-4 text-slate-400" />
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
                 Execution Assistant
               </h3>
             </div>
@@ -365,38 +365,38 @@ export function DeliveryWorkflowPage() {
                   <AlertTriangle className="h-3.5 w-3.5" />
                   <span>Risks Detected</span>
                 </div>
-                <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
+                <p className="mt-1.5 text-xs leading-relaxed text-slate-500">
                   {model.riskCopy}
                 </p>
               </div>
 
-              <div className="border-t border-white/10 pt-3">
-                <span className="block text-[11px] font-medium text-slate-400">
+              <div className="border-t border-slate-100 pt-3">
+                <span className="block text-[11px] font-medium text-slate-500">
                   Next Intelligent Step
                 </span>
-                <h4 className="mt-1 text-xs font-bold text-white">{model.nextStep}</h4>
-                <p className="mt-1 text-[11px] leading-relaxed text-slate-300">
+                <h4 className="mt-1 text-xs font-bold text-slate-950">{model.nextStep}</h4>
+                <p className="mt-1 text-[11px] leading-relaxed text-slate-500">
                   Recommended review with cross-functional owners.
                 </p>
                 <div className="mt-3 flex flex-col gap-1.5">
                   <button
                     type="button"
                     onClick={advanceWorkflow}
-                    className="w-full rounded-md bg-white/10 px-2 py-1.5 text-center text-[11px] font-medium text-white transition-colors hover:bg-white/20"
+                    className="w-full rounded-md bg-blue-600 px-2 py-1.5 text-center text-[11px] font-medium text-white transition-colors hover:bg-blue-500"
                   >
                     Continue Workflow
                   </button>
                   <button
                     type="button"
                     onClick={() => setManualActiveIndex(2)}
-                    className="w-full rounded-md bg-transparent px-2 py-1.5 text-center text-[11px] font-medium text-slate-400 transition-colors hover:text-white"
+                    className="w-full rounded-md bg-transparent px-2 py-1.5 text-center text-[11px] font-medium text-slate-500 transition-colors hover:text-slate-950"
                   >
                     Open Action Review
                   </button>
                 </div>
               </div>
 
-              <div className="border-t border-white/10 pt-3 text-[11px] text-slate-400">
+              <div className="border-t border-slate-100 pt-3 text-[11px] text-slate-500">
                 <div className="flex items-center justify-between">
                   <span>Jira</span>
                   <span className={isJiraReady ? "text-emerald-300" : "text-amber-300"}>
